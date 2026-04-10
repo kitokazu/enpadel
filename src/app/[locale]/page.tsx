@@ -6,6 +6,9 @@ import NavScroll from "@/components/NavScroll";
 import RevealObserver from "@/components/RevealObserver";
 import VideoModal from "@/components/VideoModal";
 import ContactForm from "@/components/ContactForm";
+import TiltCard from "@/components/TiltCard";
+import MobileMenu from "@/components/MobileMenu";
+
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
@@ -38,6 +41,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <a href="https://instagram.com/enpadel" className="nav-ig" target="_blank" rel="noopener" aria-label="Instagram">
             <InstagramIcon />
           </a>
+          <MobileMenu locale={locale} />
         </div>
       </nav>
 
@@ -62,7 +66,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           </div>
 
           <div className="hero-card-side">
-            <a className="hero-event-card" href="#event" aria-label="View first event details">
+            <TiltCard className="hero-event-card" href="#event" ariaLabel="View first event details">
               <p className="hec-label">{t(c.hero.card.label, locale)}</p>
               <h3 className="hec-name" dangerouslySetInnerHTML={{ __html: t(c.hero.card.nameHtml, locale) }} />
               <p className="hec-meta">{t(c.hero.card.meta, locale)}</p>
@@ -71,7 +75,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
                 <span>{t(c.hero.card.cta, locale)}</span>
                 <span className="hec-arrow" />
               </span>
-            </a>
+            </TiltCard>
           </div>
         </div>
 
@@ -89,12 +93,12 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             <p className="section-label reveal">{t(c.concept.label, locale)}</p>
             <h2 className="reveal d1">{t(c.concept.heading, locale)}</h2>
             <p className="concept-subline reveal d2">{t(c.concept.subline, locale)}</p>
-            <div className="concept-body reveal d3">
+            <div className="concept-body reveal-left d3">
               <p>{t(c.concept.body, locale)}</p>
               <span className="concept-highlight">{t(c.concept.highlight, locale)}</span>
             </div>
           </div>
-          <div className="concept-visual reveal d2">
+          <div className="concept-visual reveal-scale d2">
             <div className="c-frame">
               <div className="c-frame-inner">
                 <svg width="82" height="82" viewBox="0 0 82 82" fill="none">
@@ -176,7 +180,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             </div>
             <p className="who-tagline reveal d3">{t(c.who.tagline, locale)}</p>
           </div>
-          <div className="who-visual reveal d2">
+          <div className="who-visual reveal-scale d2">
             <div className="who-acc-tl" />
             <div className="who-img">
               <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
@@ -223,7 +227,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             </a>
             <p className="ev-collab reveal d4">{t(c.event.collab, locale)}</p>
           </div>
-          <div className="ev-visual reveal d2">
+          <div className="ev-visual reveal-left d2">
             <div className="ev-visual-main">
               <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
                 <rect x="4" y="4" width="64" height="64" stroke="#012f21" strokeWidth="0.7" />
