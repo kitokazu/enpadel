@@ -271,6 +271,23 @@ h2 {
   align-items: center;
   overflow: hidden;
 }
+.hero-slideshow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+.hero-slide.active {
+  opacity: 0.35;
+}
 .hero-glow {
   position: absolute;
   inset: 0;
@@ -516,29 +533,32 @@ h2 {
 /* ─── CONCEPT ─────────────────────────────────── */
 .concept-section {
   background: var(--green);
-  padding: 9rem 5vw;
+  padding: 5rem 5vw;
   position: relative;
   overflow: hidden;
 }
 .concept-en-bg {
   position: absolute;
   top: 50%;
-  right: -2vw;
-  transform: translateY(-50%);
-  font-size: clamp(28rem, 45vw, 60rem);
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  font-size: clamp(28rem, 50vw, 65rem);
   line-height: 1;
-  color: #012f21;
-  opacity: 0.07;
+  color: rgba(245,243,239,0.04);
   pointer-events: none;
   user-select: none;
   font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif JP', 'Times New Roman', serif;
   font-weight: 400;
   letter-spacing: 0;
   white-space: nowrap;
-  transition: opacity 1.2s ease;
+  opacity: 0;
+  transition: opacity 1.4s ease, transform 1.4s ease;
   z-index: 0;
 }
-.concept-en-bg.visible { opacity: 0.07; }
+.concept-en-bg.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 .concept-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -576,6 +596,13 @@ h2 {
 .concept-visual {
   position: relative;
   height: 560px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.concept-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .c-frame {
   position: absolute;
@@ -646,6 +673,13 @@ h2 {
 .who-visual {
   position: relative;
   height: 600px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.who-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .who-img {
   position: absolute;
@@ -776,7 +810,7 @@ h2 {
 /* ─── FIRST EVENT ────────────────────────────── */
 .event-section {
   background: var(--cream);
-  padding: 9rem 5vw;
+  padding: 5rem 5vw;
 }
 .event-wrap {
   max-width: 1200px;
@@ -836,6 +870,15 @@ h2 {
   color: var(--green);
   font-weight: 500;
 }
+.ev-location-link {
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(1,47,33,0.2);
+  transition: border-color 0.3s ease;
+}
+.ev-location-link:hover {
+  border-bottom-color: var(--green);
+}
 .ev-desc {
   font-size: 0.88rem;
   color: var(--text-mid);
@@ -865,7 +908,13 @@ h2 {
 }
 .ev-visual {
   position: relative;
-  height: 520px;
+  border-radius: 4px;
+}
+.ev-photo {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
 }
 .ev-visual-main {
   position: absolute;
@@ -887,11 +936,12 @@ h2 {
 }
 .ev-floater {
   position: absolute;
-  bottom: -2rem;
+  bottom: -3rem;
   right: -2rem;
   background: var(--green);
-  padding: 1.5rem 1.8rem;
-  width: 220px;
+  padding: 2rem 2.2rem;
+  width: 260px;
+  z-index: 2;
 }
 .ev-floater-label {
   font-size: 0.6rem;
@@ -923,6 +973,14 @@ h2 {
   width: 100%;
   padding-bottom: 56.25%;
   margin-bottom: 2.5rem;
+}
+.past-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 4px;
 }
 .past-placeholder {
   position: absolute;
@@ -1333,8 +1391,7 @@ footer {
   .event-wrap,
   .contact-wrap { grid-template-columns: 1fr; gap: 4rem; }
   .concept-visual,
-  .who-visual,
-  .ev-visual { height: 380px; }
+  .who-visual { height: 380px; }
   .ev-floater { display: none; }
   .features-row { grid-template-columns: 1fr 1fr; }
   .padel-media { grid-template-columns: 1fr; grid-template-rows: auto; }

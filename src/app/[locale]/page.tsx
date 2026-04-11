@@ -8,6 +8,7 @@ import VideoModal from "@/components/VideoModal";
 import ContactForm from "@/components/ContactForm";
 import TiltCard from "@/components/TiltCard";
 import MobileMenu from "@/components/MobileMenu";
+import HeroSlideshow from "@/components/HeroSlideshow";
 
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
@@ -47,6 +48,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
       {/* ─── HERO ─── */}
       <section className="hero" id="home">
+        <HeroSlideshow />
         <div className="hero-glow" />
         <div className="hero-grid" />
         <div className="hero-frame"><div className="hero-frame-inner" /></div>
@@ -70,7 +72,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
               <p className="hec-label">{t(c.hero.card.label, locale)}</p>
               <h3 className="hec-name" dangerouslySetInnerHTML={{ __html: t(c.hero.card.nameHtml, locale) }} />
               <p className="hec-meta">{t(c.hero.card.meta, locale)}</p>
-              <p className="hec-desc">{t(c.hero.card.desc, locale)}</p>
+              <p className="hec-desc" dangerouslySetInnerHTML={{ __html: t(c.hero.card.desc, locale) }} />
               <span className="hec-cta">
                 <span>{t(c.hero.card.cta, locale)}</span>
                 <span className="hec-arrow" />
@@ -87,7 +89,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
       {/* ─── CONCEPT ─── */}
       <section className="concept-section" id="concept">
-        <div className="concept-en-bg reveal">「縁」</div>
+        <div className="concept-en-bg">縁</div>
         <div className="concept-grid">
           <div className="concept-text">
             <p className="section-label reveal">{t(c.concept.label, locale)}</p>
@@ -99,17 +101,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             </div>
           </div>
           <div className="concept-visual reveal-scale d2">
-            <div className="c-frame">
-              <div className="c-frame-inner">
-                <svg width="82" height="82" viewBox="0 0 82 82" fill="none">
-                  <circle cx="41" cy="41" r="39" stroke="#f5f3ef" strokeWidth="0.7" />
-                  <path d="M18 41 Q41 16 64 41 Q41 66 18 41Z" stroke="#f5f3ef" strokeWidth="0.7" fill="none" />
-                  <circle cx="41" cy="41" r="5" fill="#f5f3ef" />
-                </svg>
-                <p>{t(c.concept.visualLabel, locale)}</p>
-              </div>
-            </div>
-            <div className="c-accent-line" />
+            <img src="/right-side-pic.jpg" alt="" className="concept-img" />
           </div>
         </div>
       </section>
@@ -181,17 +173,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             <p className="who-tagline reveal d3">{t(c.who.tagline, locale)}</p>
           </div>
           <div className="who-visual reveal-scale d2">
-            <div className="who-acc-tl" />
-            <div className="who-img">
-              <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
-                <circle cx="26" cy="26" r="15" stroke="#012f21" strokeWidth="0.7" fill="none" />
-                <circle cx="46" cy="26" r="15" stroke="#012f21" strokeWidth="0.7" fill="none" />
-                <path d="M14 50 Q36 42 58 50" stroke="#012f21" strokeWidth="0.7" fill="none" />
-                <path d="M20 60 Q36 54 52 60" stroke="#012f21" strokeWidth="0.5" fill="none" />
-              </svg>
-              <p>{t(c.who.visualLabel, locale)}</p>
-            </div>
-            <div className="who-acc-br" />
+            <img src="/girls.jpg" alt="" className="who-photo" />
           </div>
         </div>
       </section>
@@ -217,7 +199,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
               </div>
               <div className="ev-meta-item" style={{ gridColumn: "span 2" }}>
                 <label>{t(c.event.meta.location.label, locale)}</label>
-                <p>{t(c.event.meta.location.value, locale)}</p>
+                <p><a href="https://maps.app.goo.gl/oLPtnYDY9ZTZaxwB7" target="_blank" rel="noopener" className="ev-location-link">{t(c.event.meta.location.value, locale)}</a></p>
               </div>
             </div>
             <p className="ev-desc reveal d3">{t(c.event.desc, locale)}</p>
@@ -228,15 +210,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             <p className="ev-collab reveal d4">{t(c.event.collab, locale)}</p>
           </div>
           <div className="ev-visual reveal-left d2">
-            <div className="ev-visual-main">
-              <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
-                <rect x="4" y="4" width="64" height="64" stroke="#012f21" strokeWidth="0.7" />
-                <rect x="4" y="32" width="64" height="8" stroke="#012f21" strokeWidth="0.45" />
-                <line x1="36" y1="4" x2="36" y2="68" stroke="#012f21" strokeWidth="0.45" />
-                <circle cx="36" cy="36" r="8" stroke="#012f21" strokeWidth="0.45" fill="none" />
-              </svg>
-              <p>{t(c.event.visualLabel, locale)}</p>
-            </div>
+            <img src="/dj.png" alt="" className="ev-photo" />
             <div className="ev-floater">
               <p className="ev-floater-label">{t(c.event.floater.label, locale)}</p>
               <p className="ev-floater-text">{t(c.event.floater.text, locale)}</p>
@@ -251,20 +225,13 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <p className="section-label reveal">{t(c.past.label, locale)}</p>
           <h2 className="reveal d1">{t(c.past.heading, locale)}</h2>
           <div className="past-ratio reveal d2">
-            <div className="past-placeholder" id="pastPlaceholder" role="button" tabIndex={0} aria-label="Play event recap">
-              <div className="past-ph-bg" />
-              <div className="past-ph-grid" />
-              <div className="past-ph-content">
-                <div className="past-play-ring">
-                  <div className="past-play-tri" />
-                </div>
-                <span className="past-ph-label">{t(c.past.phLabel, locale)}</span>
-              </div>
-              <div className="past-ph-corner">
-                <span className="past-ph-corner-title">{t(c.past.phTitle, locale)}</span>
-                <span className="past-ph-corner-sub">{t(c.past.phSub, locale)}</span>
-              </div>
-            </div>
+            <iframe
+              src="https://drive.google.com/file/d/1tE76vCTH6sx_X6hSNHGrm7w98LwiuIir/preview"
+              title="EnPadel Launch Session"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              className="past-video"
+            />
           </div>
           <div className="past-caption reveal d3">
             <span className="past-caption-name">{t(c.past.captionName, locale)}</span>

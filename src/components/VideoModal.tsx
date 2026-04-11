@@ -4,7 +4,7 @@ import { useEffect, useCallback, useState } from "react";
 
 export default function VideoModal({ closeLabel }: { closeLabel: string }) {
   const [open, setOpen] = useState(false);
-  const VIDEO_URL = "";
+  const VIDEO_URL = "https://drive.google.com/file/d/1tE76vCTH6sx_X6hSNHGrm7w98LwiuIir/preview";
 
   const openVid = useCallback(() => {
     if (!VIDEO_URL) return;
