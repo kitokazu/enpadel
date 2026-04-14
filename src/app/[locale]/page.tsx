@@ -226,7 +226,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <h2 className="reveal d1">{t(c.past.heading, locale)}</h2>
           <div className="past-ratio reveal d2">
             <iframe
-              src="https://drive.google.com/file/d/1tE76vCTH6sx_X6hSNHGrm7w98LwiuIir/preview"
+              src="https://drive.google.com/file/d/1tE76vCTH6sx_X6hSNHGrm7w98LwiuIir/preview?autoplay=1"
               title="EnPadel Launch Session"
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen

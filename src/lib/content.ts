@@ -13,15 +13,30 @@ export const content = {
   hero: {
     eyebrow: { en: "Est. 2025 — Tokyo, Japan", ja: "Est. 2025 — Tokyo, Japan" },
     title: "EnPadel",
-    sub: { en: "パデルを通じて、意味のあるつながりを。", ja: "パデルを通じて、意味のあるつながりを。" },
-    jp: { en: "縁 - Connection, through play", ja: "縁 - Connection, through play" },
+    sub: {
+      en: "Building meaningful connections through padel.",
+      ja: "パデルを通じて、意味のあるつながりを。",
+    },
+    jp: {
+      en: "縁 - Connection, through play",
+      ja: "縁 - Connection, through play",
+    },
     igCta: { en: "Follow Us on Instagram", ja: "Instagramでフォロー" },
     scroll: { en: "Scroll", ja: "スクロール" },
     card: {
       label: { en: "Next Event", ja: "次のイベント" },
-      name: { en: "Fourthplace Tokyo × EnPadel", ja: "Fourthplace Tokyo × EnPadel" },
-      nameHtml: { en: "Fourthplace Tokyo × EnPadel", ja: "Fourthplace Tokyo × EnPadel" },
-      meta: { en: "@パデル東京 June 7th, 2026", ja: "@パデル東京 June 7th, 2026" },
+      name: {
+        en: "Fourth Place Tokyo × EnPadel",
+        ja: "Fourth Place Tokyo × EnPadel",
+      },
+      nameHtml: {
+        en: "Fourth Place Tokyo × EnPadel",
+        ja: "Fourth Place Tokyo × EnPadel",
+      },
+      meta: {
+        en: "@Padel Tokyo June 7th, 2026",
+        ja: "@パデル東京 June 7th, 2026",
+      },
       desc: {
         en: "A curated padel & music experience.<br/>Sport, community, and connection — in one afternoon.",
         ja: "パデルと音楽が融合した特別な体験。<br/>スポーツ、コミュニティ、そしてつながり。",
@@ -38,7 +53,7 @@ export const content = {
     },
     body: {
       en: "縁(en) — a Japanese word carrying the deep meaning of human connection and fate. In Spanish, 'en' means 'in' or 'within'.",
-      ja: "縁(en)という日本語には、「人と人とのつながり」や「ご縁」という深い意味があります。スペイン語では\"en\"は「〜に」「〜の中で」を意味します。",
+      ja: '縁(en)という日本語には、「人と人とのつながり」や「ご縁」という深い意味があります。スペイン語では"en"は「〜に」「〜の中で」を意味します。',
     },
     highlight: {
       en: "'Encounters on the court.' 'Relationships forged through play.' This is what EnPadel creates.",
@@ -110,17 +125,23 @@ export const content = {
         ja: "東京を拠点に、グローバルなパデルカルチャーを取り入れながら、コミュニティとライフスタイルを融合させた場をデザインしています。",
       },
     ],
-    tagline: { en: "Connection, through play.", ja: "プレイを通じて、つながる。" },
+    tagline: {
+      en: "Connection, through play.",
+      ja: "プレイを通じて、つながる。",
+    },
     visualLabel: { en: "Lifestyle photography", ja: "ライフスタイル写真" },
   },
   event: {
     badge: { en: "Next Event", ja: "次のイベント" },
     headingHtml: { en: "Next<br/>Event", ja: "次のイベント" },
-    name: { en: "Fourthplace Tokyo × EnPadel Collab", ja: "Fourthplace Tokyo × EnPadel コラボ" },
+    name: {
+      en: "Fourthplace Tokyo × EnPadel Collab",
+      ja: "Fourthplace Tokyo × EnPadel コラボ",
+    },
     meta: {
       eventName: {
         label: { en: "Event Name", ja: "イベント名" },
-        value: { en: "Fourthplace × EnPadel", ja: "Fourthplace × EnPadel" },
+        value: { en: "Fourth Place × EnPadel", ja: "Fourth Place × EnPadel" },
       },
       date: {
         label: { en: "Date", ja: "日時" },
@@ -128,14 +149,20 @@ export const content = {
       },
       location: {
         label: { en: "Location", ja: "場所" },
-        value: { en: "Padel Tokyo Nerima (パデル東京練馬)", ja: "パデル東京練馬" },
+        value: {
+          en: "Padel Tokyo Nerima (パデル東京練馬)",
+          ja: "パデル東京練馬",
+        },
       },
     },
     desc: {
       en: "A curated experience blending padel, music, and community. Designed for people who value meaningful encounters — an afternoon of sport followed by an evening of connection.",
       ja: "パデル、音楽、コミュニティが融合した特別な体験。意味ある出会いを大切にする方のために設計された、スポーツの午後とつながりの夜。",
     },
-    igCta: { en: "Follow us for updates", ja: "Instagramでフォローして更新情報をチェック" },
+    igCta: {
+      en: "Follow us for updates",
+      ja: "Instagramでフォローして更新情報をチェック",
+    },
     collab: {
       en: "For collaborations and partnerships, feel free to reach out.",
       ja: "コラボレーション・パートナーシップに関するお問い合わせはお気軽にご連絡ください。",
@@ -143,7 +170,10 @@ export const content = {
     visualLabel: { en: "Event photography", ja: "イベント写真" },
     floater: {
       label: { en: "Atmosphere", ja: "雰囲気" },
-      text: { en: "Sport, music & community", ja: "スポーツ、音楽、コミュニティ" },
+      text: {
+        en: "Sport, music & community",
+        ja: "スポーツ、音楽、コミュニティ",
+      },
     },
   },
   past: {
@@ -152,7 +182,10 @@ export const content = {
     phLabel: { en: "Moments", ja: "イベントレポート" },
     phTitle: { en: "EnPadel Launch Session", ja: "EnPadel ローンチセッション" },
     phSub: { en: "Tokyo", ja: "東京" },
-    captionName: { en: "EnPadel Launch Session", ja: "EnPadel ローンチセッション" },
+    captionName: {
+      en: "EnPadel Launch Session",
+      ja: "EnPadel ローンチセッション",
+    },
     captionLoc: { en: "Tokyo — 2026", ja: "東京 — 2026" },
     cta: { en: "Join the Next Event", ja: "次のイベントに参加" },
     modalClose: { en: "Close", ja: "閉じる" },
@@ -171,7 +204,10 @@ export const content = {
     },
     emailLabel: { en: "Email", ja: "メール" },
     form: {
-      name: { label: { en: "Name", ja: "お名前" }, placeholder: { en: "Your name", ja: "お名前" } },
+      name: {
+        label: { en: "Name", ja: "お名前" },
+        placeholder: { en: "Your name", ja: "お名前" },
+      },
       email: {
         label: { en: "Email", ja: "メールアドレス" },
         placeholder: { en: "your@email.com", ja: "メールアドレス" },
@@ -180,19 +216,40 @@ export const content = {
         label: { en: "Subject", ja: "件名" },
         options: [
           { value: "", label: { en: "Select a subject", ja: "件名を選択" } },
-          { value: "event", label: { en: "Events & Activations", ja: "イベント・アクティベーション" } },
-          { value: "partnership", label: { en: "Brand Partnerships", ja: "ブランドパートナーシップ" } },
-          { value: "community", label: { en: "Community & Players", ja: "コミュニティ・プレイヤー" } },
+          {
+            value: "event",
+            label: {
+              en: "Events & Activations",
+              ja: "イベント・アクティベーション",
+            },
+          },
+          {
+            value: "partnership",
+            label: { en: "Brand Partnerships", ja: "ブランドパートナーシップ" },
+          },
+          {
+            value: "community",
+            label: {
+              en: "Community & Players",
+              ja: "コミュニティ・プレイヤー",
+            },
+          },
           { value: "other", label: { en: "Other", ja: "その他" } },
         ],
       },
       message: {
         label: { en: "Message", ja: "メッセージ" },
-        placeholder: { en: "Your message...", ja: "メッセージをご記入ください..." },
+        placeholder: {
+          en: "Your message...",
+          ja: "メッセージをご記入ください...",
+        },
       },
       submit: { en: "Send", ja: "送信する" },
       sent: { en: "Sent ✓", ja: "送信完了 ✓" },
-      note: { en: "We respond within 48 hours.", ja: "48時間以内にご返信します。" },
+      note: {
+        en: "We respond within 48 hours.",
+        ja: "48時間以内にご返信します。",
+      },
     },
   },
   footer: {
@@ -209,7 +266,10 @@ export const content = {
       pastEvents: { en: "Past Events", ja: "過去のイベント" },
       contact: { en: "Contact", ja: "お問い合わせ" },
     },
-    copyright: { en: "© 2025 EnPadel. All rights reserved.", ja: "© 2025 EnPadel. 無断転載禁止。" },
+    copyright: {
+      en: "© 2025 EnPadel. All rights reserved.",
+      ja: "© 2025 EnPadel. 無断転載禁止。",
+    },
   },
 } as const;
 
