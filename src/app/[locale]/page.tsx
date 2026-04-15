@@ -9,6 +9,7 @@ import ContactForm from "@/components/ContactForm";
 import TiltCard from "@/components/TiltCard";
 import MobileMenu from "@/components/MobileMenu";
 import HeroSlideshow from "@/components/HeroSlideshow";
+import LazyIframe from "@/components/LazyIframe";
 
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
@@ -208,11 +209,12 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <p className="section-label reveal">{t(c.past.label, locale)}</p>
           <h2 className="reveal d1">{t(c.past.heading, locale)}</h2>
           <div className="past-ratio reveal d2">
-            <iframe
-              src="https://drive.google.com/file/d/1tE76vCTH6sx_X6hSNHGrm7w98LwiuIir/preview?autoplay=1"
-              title="EnPadel Launch Session"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
+            <video
+              src="/enpadel.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
               className="past-video"
             />
           </div>

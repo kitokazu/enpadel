@@ -982,7 +982,7 @@ h2 {
   padding: 9rem 5vw 10rem;
   text-align: center;
 }
-.past-wrap { max-width: 900px; margin: 0 auto; }
+.past-wrap { max-width: 1100px; margin: 0 auto; }
 .past-section .section-label { color: var(--gold); }
 .past-section h2 { color: var(--cream); margin-bottom: 4.5rem; }
 
@@ -1427,6 +1427,8 @@ footer {
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   .footer-bottom { flex-direction: column; gap: 1rem; }
   .who-acc-tl, .who-acc-br { display: none; }
+  .past-section { padding: 6rem 3vw 7rem; }
+  .past-ratio { padding-bottom: 75%; }
 }
 
 /* ─── CUSTOM SELECT ──────────────────────────── */
