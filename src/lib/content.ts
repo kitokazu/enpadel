@@ -135,8 +135,8 @@ export const content = {
     badge: { en: "Next Event", ja: "次のイベント" },
     headingHtml: { en: "Next<br/>Event", ja: "次のイベント" },
     name: {
-      en: "Fourthplace Tokyo × EnPadel Collab",
-      ja: "Fourthplace Tokyo × EnPadel コラボ",
+      en: "Fourth Place Tokyo × EnPadel Collab",
+      ja: "Fourth Place Tokyo × EnPadel コラボ",
     },
     meta: {
       eventName: {

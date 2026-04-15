@@ -120,15 +120,15 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <div className="padel-media">
             <div className="pm-box tall reveal">
               <img src="/sketch1.png" alt="" className="pm-sketch" />
-              <span className="pm-label">{t(c.padel.mediaLabels.court, locale)}</span>
+              <span className="pm-label">{t(c.padel.mediaLabels.equipment, locale)}</span>
             </div>
             <div className="pm-box reveal d1">
               <img src="/sketch2.png" alt="" className="pm-sketch" />
-              <span className="pm-label">{t(c.padel.mediaLabels.gameplay, locale)}</span>
+              <span className="pm-label">{t(c.padel.mediaLabels.court, locale)}</span>
             </div>
             <div className="pm-box reveal d2">
               <img src="/sketch3.png" alt="" className="pm-sketch" />
-              <span className="pm-label">{t(c.padel.mediaLabels.equipment, locale)}</span>
+              <span className="pm-label">{t(c.padel.mediaLabels.gameplay, locale)}</span>
             </div>
           </div>
           <div className="features-row">
