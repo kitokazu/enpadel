@@ -141,7 +141,10 @@ export const content = {
     meta: {
       eventName: {
         label: { en: "Event Name", ja: "イベント名" },
-        value: { en: "Fourth Place × EnPadel", ja: "Fourth Place × EnPadel" },
+        value: {
+          en: "Fourth Place Tokyo × EnPadel",
+          ja: "Fourth Place Tokyo × EnPadel",
+        },
       },
       date: {
         label: { en: "Date", ja: "日時" },

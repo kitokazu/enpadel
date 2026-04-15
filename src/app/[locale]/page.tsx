@@ -118,33 +118,16 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           </div>
           <div className="padel-media">
             <div className="pm-box tall reveal">
-              <div className="pm-inner">
-                <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
-                  <rect x="4" y="4" width="50" height="50" stroke="#012f21" strokeWidth="0.7" />
-                  <rect x="4" y="26" width="50" height="6" stroke="#012f21" strokeWidth="0.45" />
-                  <line x1="29" y1="4" x2="29" y2="54" stroke="#012f21" strokeWidth="0.45" />
-                </svg>
-                <span className="pm-label">{t(c.padel.mediaLabels.court, locale)}</span>
-              </div>
+              <img src="/sketch1.png" alt="" className="pm-sketch" />
+              <span className="pm-label">{t(c.padel.mediaLabels.court, locale)}</span>
             </div>
             <div className="pm-box reveal d1">
-              <div className="pm-inner">
-                <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
-                  <ellipse cx="23" cy="14" rx="11" ry="12" stroke="#012f21" strokeWidth="0.7" fill="none" />
-                  <path d="M12 25 Q10 38 23 40 Q36 38 34 25" stroke="#012f21" strokeWidth="0.7" fill="none" />
-                </svg>
-                <span className="pm-label">{t(c.padel.mediaLabels.gameplay, locale)}</span>
-              </div>
+              <img src="/sketch2.png" alt="" className="pm-sketch" />
+              <span className="pm-label">{t(c.padel.mediaLabels.gameplay, locale)}</span>
             </div>
             <div className="pm-box reveal d2">
-              <div className="pm-inner">
-                <svg width="34" height="46" viewBox="0 0 34 46" fill="none">
-                  <ellipse cx="17" cy="17" rx="13" ry="13" stroke="#012f21" strokeWidth="0.7" fill="none" />
-                  <rect x="14" y="28" width="6" height="16" rx="3" stroke="#012f21" strokeWidth="0.7" fill="none" />
-                  <circle cx="17" cy="17" r="4" stroke="#012f21" strokeWidth="0.45" fill="none" />
-                </svg>
-                <span className="pm-label">{t(c.padel.mediaLabels.equipment, locale)}</span>
-              </div>
+              <img src="/sketch3.png" alt="" className="pm-sketch" />
+              <span className="pm-label">{t(c.padel.mediaLabels.equipment, locale)}</span>
             </div>
           </div>
           <div className="features-row">
