@@ -3,6 +3,7 @@
 import { FormEvent, useRef, useState } from "react";
 import type { Locale } from "@/lib/content";
 import { content, t } from "@/lib/content";
+import { sendContactEmail } from "@/app/actions/contact";
 import CustomSelect from "./CustomSelect";
 
 type FormState = "idle" | "submitting" | "success" | "error";
@@ -34,22 +35,26 @@ export default function ContactForm({ locale }: { locale: Locale }) {
     return errs;
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const errs = validate();
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
     setFormState("submitting");
-    // Simulate submission
-    setTimeout(() => {
+    const data = new FormData(formRef.current!);
+    const result = await sendContactEmail(data);
+    if (result.success) {
       setFormState("success");
       setTimeout(() => {
         setFormState("idle");
         setErrors({});
         formRef.current?.reset();
       }, 3000);
-    }, 800);
+    } else {
+      setFormState("error");
+      setTimeout(() => setFormState("idle"), 3000);
+    }
   }
 
   const buttonLabel =
