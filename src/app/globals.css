@@ -1521,6 +1521,14 @@ footer {
   transform-origin: center;
 }
 nav.scrolled .burger-line { background: var(--green); }
+
+/* While the mobile menu is open, remove the scrolled nav's backdrop-filter.
+   backdrop-filter makes the nav the containing block for the fixed
+   .mobile-overlay, which would clip the full-screen menu to the nav bar. */
+nav.menu-open {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
 .mobile-burger.open .burger-line:nth-child(1) {
   transform: translateY(6.5px) rotate(45deg);
 }

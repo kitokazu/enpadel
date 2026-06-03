@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/content";
 import { content, t } from "@/lib/content";
@@ -8,22 +8,44 @@ import InstagramIcon from "./InstagramIcon";
 
 export default function MobileMenu({ locale }: { locale: Locale }) {
   const [open, setOpen] = useState(false);
+  const navTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const c = content;
+
+  // Lock body scroll and drop the nav's backdrop-filter while the menu is
+  // open. A scrolled nav has `backdrop-filter`, which makes it the containing
+  // block for the fixed overlay — that clips the full-screen menu to the nav
+  // bar. We restore it only after the close animation so the overlay doesn't
+  // re-clip mid fade-out.
+  const setNav = useCallback((isOpen: boolean) => {
+    const nav = document.getElementById("nav");
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    if (navTimer.current) {
+      clearTimeout(navTimer.current);
+      navTimer.current = null;
+    }
+    if (isOpen) {
+      nav?.classList.add("menu-open");
+    } else {
+      navTimer.current = setTimeout(() => nav?.classList.remove("menu-open"), 450);
+    }
+  }, []);
 
   const close = useCallback(() => {
     setOpen(false);
-    document.body.style.overflow = "";
-  }, []);
+    setNav(false);
+  }, [setNav]);
 
   function toggle() {
     const next = !open;
     setOpen(next);
-    document.body.style.overflow = next ? "hidden" : "";
+    setNav(next);
   }
 
   useEffect(() => {
     return () => {
+      if (navTimer.current) clearTimeout(navTimer.current);
       document.body.style.overflow = "";
+      document.getElementById("nav")?.classList.remove("menu-open");
     };
   }, []);
 
