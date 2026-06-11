@@ -34,8 +34,8 @@ export const content = {
         ja: "Fourth Place Tokyo × EnPadel",
       },
       meta: {
-        en: "@Padel Tokyo June 7th, 2026",
-        ja: "@パデル東京 June 7th, 2026",
+        en: "@Padel Tokyo — Date TBD",
+        ja: "@パデル東京 — 日程未定",
       },
       desc: {
         en: "A curated padel & music experience.<br/>Sport, community, and connection — in one afternoon.",
@@ -148,7 +148,7 @@ export const content = {
       },
       date: {
         label: { en: "Date", ja: "日時" },
-        value: { en: "June 7th, 2026", ja: "2026年6月7日" },
+        value: { en: "TBD", ja: "未定" },
       },
       location: {
         label: { en: "Location", ja: "場所" },
