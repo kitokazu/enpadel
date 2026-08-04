@@ -8,10 +8,17 @@ export default function NavScroll() {
   useEffect(() => {
     const nav = document.getElementById("nav");
     if (!nav) return;
+    // The scroll-video intro is dark and full-bleed, so the nav has to stay
+    // transparent for its whole length. Going cream at 55px would paint a
+    // blurred bar over the footage for five screens.
+    const hero = document.getElementById("home");
     const handler = () => {
-      nav.classList.toggle("scrolled", window.scrollY > 55);
+      const threshold = hero ? hero.offsetHeight - 80 : 55;
+      nav.classList.toggle("scrolled", window.scrollY > threshold);
     };
+    handler();
     window.addEventListener("scroll", handler, { passive: true });
+    window.addEventListener("resize", handler);
 
     // Active section indicator
     const links = nav.querySelectorAll<HTMLAnchorElement>(".nav-center a");
@@ -40,6 +47,7 @@ export default function NavScroll() {
 
     return () => {
       window.removeEventListener("scroll", handler);
+      window.removeEventListener("resize", handler);
       sectionObserver.disconnect();
     };
   }, []);

@@ -36,6 +36,8 @@ export default async function LocaleLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* First paint of the intro, before any video byte has decoded. */}
+        <link rel="preload" as="image" href="/scroll-hero-poster.jpg" fetchPriority="high" />
       </head>
       <body>{children}</body>
     </html>

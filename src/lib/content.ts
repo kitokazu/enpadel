@@ -11,7 +11,7 @@ export const content = {
     },
   },
   hero: {
-    eyebrow: { en: "Est. 2025 — Tokyo, Japan", ja: "Est. 2025 — Tokyo, Japan" },
+    eyebrow: { en: "Est. 2025 — Tokyo, Japan", ja: "2025年設立 — 東京" },
     title: "EnPadel",
     sub: {
       en: "Building meaningful connections through padel.",
