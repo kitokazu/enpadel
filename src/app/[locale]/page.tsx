@@ -4,19 +4,62 @@ import { content, t } from "@/lib/content";
 import InstagramIcon from "@/components/InstagramIcon";
 import NavScroll from "@/components/NavScroll";
 import RevealObserver from "@/components/RevealObserver";
-import VideoModal from "@/components/VideoModal";
 import ContactForm from "@/components/ContactForm";
-import TiltCard from "@/components/TiltCard";
 import MobileMenu from "@/components/MobileMenu";
-import HeroSlideshow from "@/components/HeroSlideshow";
-import LazyIframe from "@/components/LazyIframe";
+import ScrollVideoHero, { type HeroPanel } from "@/components/ScrollVideoHero";
+import LazyVideo from "@/components/LazyVideo";
+import Parallax from "@/components/Parallax";
 
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
   const locale: Locale = rawLocale === "ja" ? "ja" : "en";
-  const altLocale: Locale = locale === "ja" ? "en" : "ja";
   const c = content;
+
+  // Five beats, timed to the five moments of the intro video: the match, the
+  // camera gliding past the court, two people talking courtside, the group on
+  // the lawn, then the DJ booth. Copy is resolved here so the client component
+  // never pulls in the whole content dictionary.
+  const heroPanels: HeroPanel[] = [
+    {
+      // Open blue court, player far left — centred type sits in clean space.
+      variant: "center-lg",
+      eyebrow: t(c.hero.eyebrow, locale),
+      titleHtml: c.hero.title,
+      sub: t(c.hero.sub, locale),
+    },
+    {
+      // The camera glides across an empty court. 縁 alone, set as a symbol
+      // rather than a headline — and it reads the same in both locales.
+      variant: "center-hero",
+      eyebrow: t(c.concept.label, locale),
+      titleHtml: "縁",
+      sub: t(c.concept.subline, locale),
+    },
+    {
+      // Two people on a bench fill the right two-thirds; the left third is
+      // dark fencing, which is where the type goes.
+      variant: "left-lg",
+      eyebrow: t(c.who.label, locale),
+      titleHtml: t(c.who.headingHtml, locale),
+      sub: t(c.who.tagline, locale),
+    },
+    {
+      // Blurred figure in the right foreground. Smallest explanatory block.
+      variant: "left-md",
+      eyebrow: t(c.padel.label, locale),
+      titleHtml: t(c.padel.features[1].title, locale),
+      sub: t(c.padel.features[1].desc, locale),
+    },
+    {
+      // DJ dead centre — the CTA drops to the lower left and keeps him clear.
+      variant: "left-low",
+      eyebrow: t(c.event.badge, locale),
+      titleHtml: t(c.hero.card.nameHtml, locale),
+      sub: t(c.hero.card.meta, locale),
+      cta: { label: t(c.hero.card.cta, locale), href: "#event" },
+    },
+  ];
 
   return (
     <>
@@ -47,46 +90,8 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         </div>
       </nav>
 
-      {/* ─── HERO ─── */}
-      <section className="hero" id="home">
-        <HeroSlideshow />
-        <div className="hero-glow" />
-        <div className="hero-grid" />
-        <div className="hero-frame"><div className="hero-frame-inner" /></div>
-
-        <div className="hero-inner">
-          <div className="hero-content">
-            <p className="hero-eyebrow">{t(c.hero.eyebrow, locale)}</p>
-            <h1 className="hero-title">{c.hero.title}</h1>
-            <p className="hero-sub">{t(c.hero.sub, locale)}</p>
-            <p className="hero-jp">{t(c.hero.jp, locale)}</p>
-            <div className="hero-cta">
-              <a href="https://instagram.com/enpadel" className="hero-ig-cta" target="_blank" rel="noopener">
-                <InstagramIcon size={16} />
-                <span>{t(c.hero.igCta, locale)}</span>
-              </a>
-            </div>
-          </div>
-
-          <div className="hero-card-side">
-            <TiltCard className="hero-event-card" href="#event" ariaLabel="View first event details">
-              <p className="hec-label">{t(c.hero.card.label, locale)}</p>
-              <h3 className="hec-name" dangerouslySetInnerHTML={{ __html: t(c.hero.card.nameHtml, locale) }} />
-              <p className="hec-meta">{t(c.hero.card.meta, locale)}</p>
-              <p className="hec-desc" dangerouslySetInnerHTML={{ __html: t(c.hero.card.desc, locale) }} />
-              <span className="hec-cta">
-                <span>{t(c.hero.card.cta, locale)}</span>
-                <span className="hec-arrow" />
-              </span>
-            </TiltCard>
-          </div>
-        </div>
-
-        <div className="hero-scroll">
-          <div className="hero-scroll-line" />
-          <span>{t(c.hero.scroll, locale)}</span>
-        </div>
-      </section>
+      {/* ─── SCROLL VIDEO INTRO ─── */}
+      <ScrollVideoHero panels={heroPanels} scrollLabel={t(c.hero.scroll, locale)} />
 
       {/* ─── CONCEPT ─── */}
       <section className="concept-section" id="concept">
@@ -101,9 +106,17 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
               <span className="concept-highlight">{t(c.concept.highlight, locale)}</span>
             </div>
           </div>
-          <div className="concept-visual reveal-scale d2">
-            <img src="/right-side-pic.jpg" alt="" className="concept-img" />
-          </div>
+          <Parallax className="concept-visual framed reveal-scale d2">
+            <img
+              src="/right-side-pic-web.jpg"
+              alt=""
+              width={1200}
+              height={1800}
+              loading="lazy"
+              decoding="async"
+              className="concept-img"
+            />
+          </Parallax>
         </div>
       </section>
 
@@ -119,15 +132,15 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           </div>
           <div className="padel-media">
             <div className="pm-box tall reveal">
-              <img src="/sketch1.png" alt="" className="pm-sketch" />
+              <img src="/sketch1.png" alt="" width={800} height={800} loading="lazy" decoding="async" className="pm-sketch" />
               <span className="pm-label">{t(c.padel.mediaLabels.equipment, locale)}</span>
             </div>
             <div className="pm-box reveal d1">
-              <img src="/sketch2.png" alt="" className="pm-sketch" />
+              <img src="/sketch2.png" alt="" width={800} height={800} loading="lazy" decoding="async" className="pm-sketch" />
               <span className="pm-label">{t(c.padel.mediaLabels.court, locale)}</span>
             </div>
             <div className="pm-box reveal d2">
-              <img src="/sketch3.png" alt="" className="pm-sketch" />
+              <img src="/sketch3.png" alt="" width={800} height={800} loading="lazy" decoding="async" className="pm-sketch" />
               <span className="pm-label">{t(c.padel.mediaLabels.gameplay, locale)}</span>
             </div>
           </div>
@@ -156,9 +169,17 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             </div>
             <p className="who-tagline reveal d3">{t(c.who.tagline, locale)}</p>
           </div>
-          <div className="who-visual reveal-scale d2">
-            <img src="/girls.jpg" alt="" className="who-photo" />
-          </div>
+          <Parallax className="who-visual framed reveal-scale d2">
+            <img
+              src="/girls-web.jpg"
+              alt=""
+              width={1800}
+              height={1200}
+              loading="lazy"
+              decoding="async"
+              className="who-photo"
+            />
+          </Parallax>
         </div>
       </section>
 
@@ -193,8 +214,16 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             </a>
             <p className="ev-collab reveal d4">{t(c.event.collab, locale)}</p>
           </div>
-          <div className="ev-visual reveal-left d2">
-            <img src="/dj.png" alt="" className="ev-photo" />
+          <div className="ev-visual framed reveal-left d2">
+            <img
+              src="/dj.jpg"
+              alt=""
+              width={1800}
+              height={1012}
+              loading="lazy"
+              decoding="async"
+              className="ev-photo"
+            />
             <div className="ev-floater">
               <p className="ev-floater-label">{t(c.event.floater.label, locale)}</p>
               <p className="ev-floater-text">{t(c.event.floater.text, locale)}</p>
@@ -208,13 +237,10 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         <div className="past-wrap">
           <p className="section-label reveal">{t(c.past.label, locale)}</p>
           <h2 className="reveal d1">{t(c.past.heading, locale)}</h2>
-          <div className="past-ratio reveal d2">
-            <video
-              src="/enpadel.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
+          <div className="past-ratio framed reveal d2">
+            <LazyVideo
+              src="/enpadel-web.mp4"
+              poster="/enpadel-poster.jpg"
               className="past-video"
             />
           </div>
@@ -227,8 +253,6 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           </div>
         </div>
       </section>
-
-      <VideoModal closeLabel={t(c.past.modalClose, locale)} />
 
       {/* ─── INSTAGRAM ─── */}
       <section className="ig-section" id="community">
