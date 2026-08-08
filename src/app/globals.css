@@ -722,7 +722,9 @@ h2 {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  gap: 5rem;
+  /* The reel's mask feather already reads as a gap; a wide column gap on top
+     of it left the two halves looking unrelated. */
+  gap: 3rem;
   align-items: center;
 }
 .who-text h2 { margin-bottom: 2rem; }
@@ -754,8 +756,8 @@ h2 {
   overflow: hidden;
   padding: 1.6rem 0;
   min-width: 0; /* let the grid column clip the strip instead of growing to fit it */
-  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
 }
 /* The reel is rendered twice and the track travels exactly -50%, so the
    second copy lands where the first began: a seamless loop. */
@@ -790,8 +792,10 @@ h2 {
 .marquee-print img {
   display: block;
   /* Fixed height, natural width: landscape and portrait prints keep their own
-     shapes, which gives the strip its rhythm. */
-  height: clamp(240px, 38vh, 400px);
+     shapes, which gives the strip its rhythm. Sized so the column window shows
+     about a print and a half — one photo filling the window reads as a static
+     image, not a strip. */
+  height: clamp(220px, 32vh, 340px);
   width: auto;
   border-radius: 1px;
   /* Same grade as every other photo and the intro footage. */
@@ -1152,21 +1156,72 @@ h2 {
 .v-modal-close:hover { color: var(--cream); }
 
 /* ─── INSTAGRAM ──────────────────────────────── */
+/* A wide editorial band, not a centred island: headline on the left, the
+   action on the right, sharing one baseline-ish axis. The old centred stack
+   left a 500px column adrift in the full-width cream. */
 .ig-section {
   background: var(--cream-dark);
   padding: 7rem 5vw;
-  text-align: center;
 }
-.ig-inner { max-width: 500px; margin: 0 auto; }
+.ig-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 3rem 6rem;
+}
 .ig-section .section-label { color: var(--gold); }
 .ig-headline {
   font-family: var(--serif);
   font-size: clamp(2.2rem, 4.5vw, 3.8rem);
   font-weight: 300;
   color: var(--green);
-  margin-bottom: 2.5rem;
   line-height: 1.1;
 }
+.ig-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.4rem;
+}
+/* The feed preview: square tiles in the Instagram grid idiom, carrying the
+   site grade. On hover the tile drops its veil and shows the glyph — the
+   whole strip is one big "this is our feed" affordance. */
+.ig-grid {
+  max-width: 1200px;
+  margin: 3.5rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.8rem;
+}
+.ig-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.ig-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.86) contrast(1.03);
+  transition: transform 0.9s var(--ease), filter 0.6s var(--ease);
+}
+.ig-tile-veil {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream);
+  background: rgba(2,26,19,0.4);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease);
+}
+.ig-tile:hover img { transform: scale(1.06); filter: saturate(1) contrast(1.03); }
+.ig-tile:hover .ig-tile-veil { opacity: 1; }
 .ig-link {
   display: inline-flex;
   align-items: center;
@@ -1181,12 +1236,6 @@ h2 {
   transition: all 0.3s;
 }
 .ig-link:hover { background: rgba(1,47,33,0.05); border-color: rgba(1,47,33,0.35); }
-.ig-divider {
-  width: 1px;
-  height: 3.5rem;
-  background: rgba(1,47,33,0.1);
-  margin: 2.5rem auto;
-}
 .ig-handle {
   font-family: var(--serif);
   font-size: 1.2rem;
@@ -1403,6 +1452,11 @@ footer {
   /* Single column: run the reel edge to edge under the copy instead of
      boxing it into the column width. */
   .marquee { margin: 0 -5vw; }
+  /* The IG band stacks and everything returns to the left edge. */
+  .ig-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .ig-cta { align-items: flex-start; }
+  /* Two rows of three reads as a feed; six across would be postage stamps. */
+  .ig-grid { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
   .concept-en-bg { left: 50%; top: 30%; }
   .ev-floater { display: none; }
   .features-row { grid-template-columns: 1fr 1fr; }
@@ -1676,6 +1730,9 @@ nav:not(.scrolled) *:focus-visible {
 .contact-section {
   padding: clamp(7rem, 13vh, 11rem) 5vw;
 }
+/* The IG section sits slightly shallower than the full acts — the feed grid
+   gives it body, but it is still a hand-off to Instagram, not a destination. */
+.ig-section { padding: clamp(6rem, 10vh, 8.5rem) 5vw; }
 
 /* 3. Inverted Event section: the second dark beat, echoing the DJ panel that
       closes the intro, and the page's conversion moment. */

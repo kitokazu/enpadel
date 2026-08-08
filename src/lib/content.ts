@@ -110,7 +110,9 @@ export const content = {
   },
   who: {
     label: { en: "Who We Are", ja: "私たちについて" },
-    headingHtml: { en: "More than<br/>a sport.", ja: "スポーツを超えた場所。" },
+    /* JA carries an explicit break like EN does — otherwise it wraps
+       mid-word (スポーツを超え/た場所。) at column widths. */
+    headingHtml: { en: "More than<br/>a sport.", ja: "スポーツを<br/>超えた場所。" },
     body: [
       {
         en: "A collective shaped by sport, community, and culture.",
@@ -148,7 +150,7 @@ export const content = {
       },
       date: {
         label: { en: "Date", ja: "日時" },
-        value: { en: "TBD", ja: "未定" },
+        value: { en: "November 8th, 2026", ja: "2026年11月8日" },
       },
       location: {
         label: { en: "Location", ja: "場所" },

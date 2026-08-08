@@ -252,14 +252,47 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       {/* ─── INSTAGRAM ─── */}
       <section className="ig-section" id="community">
         <div className="ig-inner">
-          <p className="section-label reveal">{t(c.ig.label, locale)}</p>
-          <h2 className="ig-headline reveal d1" dangerouslySetInnerHTML={{ __html: t(c.ig.headlineHtml, locale) }} />
-          <a href="https://instagram.com/enpadel" className="ig-link reveal d2" target="_blank" rel="noopener">
-            <InstagramIcon size={16} strokeWidth={1.5} />
-            <span>{t(c.ig.linkText, locale)}</span>
-          </a>
-          <div className="ig-divider" />
-          <p className="ig-handle reveal d3">@enpadel</p>
+          <div>
+            <p className="section-label reveal">{t(c.ig.label, locale)}</p>
+            <h2 className="ig-headline reveal d1" dangerouslySetInnerHTML={{ __html: t(c.ig.headlineHtml, locale) }} />
+          </div>
+          <div className="ig-cta reveal d2">
+            <a href="https://instagram.com/enpadel" className="ig-link" target="_blank" rel="noopener">
+              <InstagramIcon size={16} strokeWidth={1.5} />
+              <span>{t(c.ig.linkText, locale)}</span>
+            </a>
+            <p className="ig-handle">@enpadel</p>
+          </div>
+        </div>
+        {/* A designed preview of the feed, not a live embed: instagram.com
+            cannot be iframed and the official embeds ship Instagram's own
+            script and card chrome. Six of our photos as grid tiles, each
+            linking through. Decorative duplicates of the main link above, so
+            they are skipped by keyboard and screen readers. */}
+        <div className="ig-grid reveal d3">
+          {[
+            "/friends/trio-web.jpg",
+            "/dj.jpg",
+            "/friends/pair-web.jpg",
+            "/right-side-pic-web.jpg",
+            "/friends/group-web.jpg",
+            "/friends/table-web.jpg",
+          ].map((src) => (
+            <a
+              key={src}
+              href="https://instagram.com/enpadel"
+              className="ig-tile"
+              target="_blank"
+              rel="noopener"
+              tabIndex={-1}
+              aria-hidden="true"
+            >
+              <img src={src} alt="" loading="lazy" decoding="async" />
+              <span className="ig-tile-veil">
+                <InstagramIcon size={18} strokeWidth={1.5} />
+              </span>
+            </a>
+          ))}
         </div>
       </section>
 
