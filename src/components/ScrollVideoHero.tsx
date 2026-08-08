@@ -5,7 +5,6 @@ import {
   motion,
   useMotionValue,
   useReducedMotion,
-  useScroll,
   useTransform,
   type MotionValue,
 } from "framer-motion";
@@ -391,32 +390,63 @@ function TravellingPool({ progress }: { progress: MotionValue<number> }) {
 function StaticPanel({ panel, index }: { panel: HeroPanel; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
-  // Fades in AND out, so a panel on its way up never collides with the fixed
-  // nav or with the panel arriving behind it.
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  // The windows are set so a beat is fully OUT (0.68) before the next is
-  // visible at all (0.2): with 92svh panels the next panel's progress trails
-  // this one's by ~0.48, so 0.68 - 0.48 = 0.2 — they meet exactly, and two
-  // half-faded beats can never share a phone screen. The out-window must also
-  // start above 0.5: the first panel sits at ~0.5 when the page loads at rest,
-  // and must not already be fading. A sliver of pure footage plays between
-  // beats, matching the GAP the scrub mode keeps on desktop.
-  const opacity = useTransform(scrollYProgress, [0.2, 0.4, 0.56, 0.68], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0.2, 0.68], [24, -24]);
+
+  // Plain DOM writes from a scroll listener, deliberately not framer-driven.
+  // Two reasons, both learned the hard way:
+  // - framer's useScroll({target}) caches element offsets, and in this layout
+  //   (a sticky sibling plus the stage's -100svh pull-up) the cached offset
+  //   landed a full viewport low — beats faded in while their box was already
+  //   exiting, printing text over the fixed nav.
+  // - Routing the fix through a MotionValue keeps framer's scheduler between
+  //   the measurement and the pixels. getBoundingClientRect at event time is
+  //   ground truth; writing style in the same tick keeps it that way.
+  // Progress semantics match framer's ["start end", "end start"]: 0 when the
+  // panel's top touches the viewport bottom, 1 when its bottom clears the top.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const noTranslate = !!reduced;
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = clamp01((vh - rect.top) / (vh + rect.height));
+      // The windows are set so a beat is fully OUT (0.68) before the next is
+      // visible at all (0.2): with 92svh panels the next beat's progress
+      // trails this one's by ~0.48, so 0.68 - 0.48 = 0.2 — they meet exactly,
+      // and two half-faded beats can never share a phone screen. The
+      // out-window must also start above 0.5: the first panel sits at ~0.5
+      // when the page loads at rest, and must not already be fading. The
+      // sliver of pure footage between beats matches the desktop scrub GAP.
+      const o =
+        p < 0.2 ? 0 :
+        p < 0.4 ? (p - 0.2) / 0.2 :
+        p <= 0.56 ? 1 :
+        p < 0.68 ? 1 - (p - 0.56) / 0.12 : 0;
+      el.style.opacity = o.toFixed(3);
+      if (!noTranslate) {
+        const t = clamp01((p - 0.2) / 0.48);
+        el.style.transform = `translateY(${(24 - 48 * t).toFixed(1)}px)`;
+      }
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [reduced]);
 
   return (
-    <motion.div
+    <div
       ref={ref}
       /* No variant on narrow screens: "left" versus "centre" is meaningless at
          390px, so the fallback keeps every beat centred. */
       className={`svh-panel svh-panel--static${index === 0 ? " svh-panel--first" : ""}`}
-      style={reduced ? { opacity } : { opacity, y }}
+      style={{ opacity: 0 }}
     >
       <PanelBody panel={panel} isFirst={index === 0} />
-    </motion.div>
+    </div>
   );
 }
 

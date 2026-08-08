@@ -591,7 +591,9 @@ h2 {
 }
 
 @media (max-width: 860px) {
-  .svh[data-ready="1"] { height: 420svh; }
+  /* Scrub tier only: loop mode flows normally and must keep height: auto,
+     or the last beat overflows the section into the content below. */
+  .svh:not(.svh--loop)[data-ready="1"] { height: 420svh; }
   .svh-rail { display: none; }
   .svh-title { font-size: clamp(2.8rem, 12vw, 5rem); }
   .svh-sub { font-size: clamp(1.05rem, 4.2vw, 1.4rem); }
