@@ -9,6 +9,7 @@ import MobileMenu from "@/components/MobileMenu";
 import ScrollVideoHero, { type HeroPanel } from "@/components/ScrollVideoHero";
 import LazyVideo from "@/components/LazyVideo";
 import Parallax from "@/components/Parallax";
+import PhotoMarquee, { WHO_PHOTOS } from "@/components/PhotoMarquee";
 
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
@@ -169,17 +170,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             </div>
             <p className="who-tagline reveal d3">{t(c.who.tagline, locale)}</p>
           </div>
-          <Parallax className="who-visual framed reveal-scale d2">
-            <img
-              src="/girls-web.jpg"
-              alt=""
-              width={1800}
-              height={1200}
-              loading="lazy"
-              decoding="async"
-              className="who-photo"
-            />
-          </Parallax>
+          <PhotoMarquee photos={WHO_PHOTOS} />
         </div>
       </section>
 
@@ -214,16 +205,20 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             </a>
             <p className="ev-collab reveal d4">{t(c.event.collab, locale)}</p>
           </div>
-          <div className="ev-visual framed reveal-left d2">
-            <img
-              src="/dj.jpg"
-              alt=""
-              width={1800}
-              height={1012}
-              loading="lazy"
-              decoding="async"
-              className="ev-photo"
-            />
+          {/* framed clips (and zooms) only the photo; the floater hangs over
+              the corner and must stay outside the clip. */}
+          <div className="ev-visual reveal-left d2">
+            <div className="framed">
+              <img
+                src="/dj.jpg"
+                alt=""
+                width={1800}
+                height={1012}
+                loading="lazy"
+                decoding="async"
+                className="ev-photo"
+              />
+            </div>
             <div className="ev-floater">
               <p className="ev-floater-label">{t(c.event.floater.label, locale)}</p>
               <p className="ev-floater-text">{t(c.event.floater.text, locale)}</p>

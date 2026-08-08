@@ -721,8 +721,8 @@ h2 {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7rem;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 5rem;
   align-items: center;
 }
 .who-text h2 { margin-bottom: 2rem; }
@@ -744,53 +744,64 @@ h2 {
   color: var(--green);
   opacity: 0.55;
 }
-.who-visual {
-  position: relative;
-  height: 600px;
+/* ── The photo reel ────────────────────────────────────────────────
+   A film strip that drifts sideways on its own, framed in the column beside
+   the copy. The window is narrow, so the mask feathers are proportionally
+   wider than a full-bleed strip would use: prints dissolve in and out rather
+   than being guillotined at the column edge. Vertical padding gives the
+   rotated prints room to breathe. */
+.marquee {
   overflow: hidden;
-  border-radius: 4px;
+  padding: 1.6rem 0;
+  min-width: 0; /* let the grid column clip the strip instead of growing to fit it */
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 }
-.who-photo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.who-img {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(145deg, #e2ddd5 0%, #d5d0c8 100%);
-  border: 1px solid rgba(1,47,33,0.06);
+/* The reel is rendered twice and the track travels exactly -50%, so the
+   second copy lands where the first began: a seamless loop. */
+.marquee-track {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  overflow: hidden;
+  width: max-content;
+  animation: marquee-drift 64s linear infinite;
+  will-change: transform;
 }
-.who-img svg { opacity: 0.15; }
-.who-img p {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+@keyframes marquee-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
-.who-acc-tl {
-  position: absolute;
-  top: -1.5rem;
-  left: -1.5rem;
-  width: 6rem;
-  height: 6rem;
-  border: 1px solid rgba(1,47,33,0.07);
-  pointer-events: none;
+
+/* A print: photo plus its paper margin. The matte is the "soft border" — a
+   real border-width would draw a hard line at every zoom level, where padding
+   over a paper-white ground keeps the edge soft against the cream page. */
+.marquee-print {
+  flex-shrink: 0;
+  margin: 0 2.4rem 0 0;
+  padding: 0.62rem;
+  background: #fdfcfa;
+  border-radius: 3px;
+  box-shadow:
+    0 1px 2px rgba(1,47,33,0.10),
+    0 16px 34px -16px rgba(1,47,33,0.3);
 }
-.who-acc-br {
-  position: absolute;
-  bottom: -1.5rem;
-  right: -1.5rem;
-  width: 4.5rem;
-  height: 4.5rem;
-  border: 1px solid rgba(184,154,106,0.18);
-  pointer-events: none;
+/* Alternating tilt keeps the tossed-print feel of a contact sheet rather
+   than a conveyor belt. */
+.marquee-print:nth-child(odd)  { transform: rotate(-1.6deg); }
+.marquee-print:nth-child(even) { transform: rotate(1.3deg); }
+.marquee-print img {
+  display: block;
+  /* Fixed height, natural width: landscape and portrait prints keep their own
+     shapes, which gives the strip its rhythm. */
+  height: clamp(240px, 38vh, 400px);
+  width: auto;
+  border-radius: 1px;
+  /* Same grade as every other photo and the intro footage. */
+  filter: saturate(0.86) contrast(1.03);
+}
+
+/* Motion-sensitive visitors get a still strip they can swipe by hand. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .marquee { overflow-x: auto; }
 }
 
 /* ─── WHAT IS PADEL ──────────────────────────── */
@@ -1388,8 +1399,10 @@ footer {
   .who-wrap,
   .event-wrap,
   .contact-wrap { grid-template-columns: 1fr; gap: 4rem; }
-  .concept-visual,
-  .who-visual { height: 380px; }
+  .concept-visual { height: 380px; }
+  /* Single column: run the reel edge to edge under the copy instead of
+     boxing it into the column width. */
+  .marquee { margin: 0 -5vw; }
   .concept-en-bg { left: 50%; top: 30%; }
   .ev-floater { display: none; }
   .features-row { grid-template-columns: 1fr 1fr; }
@@ -1406,7 +1419,6 @@ footer {
   .form-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   .footer-bottom { flex-direction: column; gap: 1rem; }
-  .who-acc-tl, .who-acc-br { display: none; }
   .past-section { padding: 6rem 3vw 7rem; }
   .past-ratio { padding-bottom: 75%; }
 }
@@ -1709,20 +1721,11 @@ nav:not(.scrolled) *:focus-visible {
 
 /* Print, not web app. */
 .concept-visual,
-.who-visual,
 .ev-visual,
 .ev-photo,
 .past-video,
-.concept-img,
-.who-photo { border-radius: 2px; }
+.concept-img { border-radius: 2px; }
 
-/* The past-events reel is shot vertical; fill the 16:9 frame rather than
-   letterboxing it. */
-.past-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 
 /* 5. Every section label rhymes with the intro's gold eyebrow, and draws its
       own rule in when it scrolls into view. */
