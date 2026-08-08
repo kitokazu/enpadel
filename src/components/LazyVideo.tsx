@@ -26,8 +26,13 @@ export default function LazyVideo({
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          // play() here would race the React render that attaches src — on
+          // first intersection there is nothing to play yet, which left the
+          // video frozen on its poster for anyone who scrolled straight to it
+          // and stopped. The autoPlay attribute starts it once src arrives;
+          // this play() only handles re-entry after a pause().
           setMounted(true);
-          video.play().catch(() => {});
+          if (video.currentSrc) video.play().catch(() => {});
         } else {
           video.pause();
         }
@@ -45,6 +50,7 @@ export default function LazyVideo({
       poster={poster}
       src={mounted ? src : undefined}
       preload="none"
+      autoPlay
       muted
       loop
       playsInline

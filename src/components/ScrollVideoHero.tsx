@@ -397,8 +397,15 @@ function StaticPanel({ panel, index }: { panel: HeroPanel; index: number }) {
     target: ref,
     offset: ["start end", "end start"],
   });
-  const opacity = useTransform(scrollYProgress, [0.14, 0.36, 0.56, 0.72], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0.14, 0.72], [24, -24]);
+  // The windows are set so a beat is fully OUT (0.68) before the next is
+  // visible at all (0.2): with 92svh panels the next panel's progress trails
+  // this one's by ~0.48, so 0.68 - 0.48 = 0.2 — they meet exactly, and two
+  // half-faded beats can never share a phone screen. The out-window must also
+  // start above 0.5: the first panel sits at ~0.5 when the page loads at rest,
+  // and must not already be fading. A sliver of pure footage plays between
+  // beats, matching the GAP the scrub mode keeps on desktop.
+  const opacity = useTransform(scrollYProgress, [0.2, 0.4, 0.56, 0.68], [0, 1, 1, 0]);
+  const y = useTransform(scrollYProgress, [0.2, 0.68], [24, -24]);
 
   return (
     <motion.div
