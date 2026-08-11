@@ -106,32 +106,48 @@ export default function ScrollVideoHero({
 
   const isLoop = tier === "loop";
 
-  // Safari will not composite a <video> that has never entered a playing state,
-  // so prime it once. The timeout is a backstop: if the file never loads we
-  // still open the track up rather than stranding the visitor on panel one.
+  // Prime the video and open the track. Two Safari behaviours shape this:
+  // the desktop one will not composite a <video> that has never entered a
+  // playing state, and the iOS one will not even FETCH a muted inline video
+  // on its own — preload="auto" is ignored and loadeddata may simply never
+  // fire. So don't wait for loadeddata: kick playback immediately (pausing on
+  // the first frame), and expand the track on loadedmetadata. Opening early
+  // is safe because the scrub loop never seeks past what has buffered — the
+  // worst an early scroller sees is the poster while bytes arrive.
   useEffect(() => {
     if (!tier) return;
     const video = videoRef.current;
     if (!video) return;
     let cancelled = false;
 
-    const onLoaded = () => {
-      if (cancelled) return;
-      setReady(true);
-      if (isLoop) return;
+    const markReady = () => !cancelled && setReady(true);
+
+    if (video.readyState >= 1) markReady();
+    else video.addEventListener("loadedmetadata", markReady, { once: true });
+
+    if (!isLoop) {
       const played = video.play();
-      if (played) played.then(() => video.pause()).catch(() => {});
-    };
+      if (played)
+        played
+          .then(() => {
+            if (cancelled) return;
+            video.pause();
+            setReady(true);
+          })
+          .catch(() => {
+            // Autoplay refused (iOS Low Power Mode). Data still loads and
+            // paused seeks still paint, so fall back to a plain load.
+            if (!cancelled) video.load();
+          });
+    }
 
-    if (video.readyState >= 2) onLoaded();
-    else video.addEventListener("loadeddata", onLoaded, { once: true });
-
-    const timer = window.setTimeout(() => !cancelled && setReady(true), READY_TIMEOUT);
+    // Backstop: if the file never even reports metadata, still open the
+    // track rather than stranding the visitor on panel one.
+    const timer = window.setTimeout(markReady, READY_TIMEOUT);
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
-      video.removeEventListener("loadeddata", onLoaded);
-      window.clearTimeout(timer);
+      video.removeEventListener("loadedmetadata", markReady);
     };
   }, [tier, isLoop]);
 
