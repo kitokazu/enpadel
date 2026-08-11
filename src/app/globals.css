@@ -397,6 +397,14 @@ h2 {
   word-break: auto-phrase;
   text-shadow: 0 1px 30px rgba(2,26,19,0.55);
 }
+/* The × in the collab lockup: a divider between the two names, not a letter —
+   its own line, smaller, gold. */
+.svh-title .svh-x {
+  display: block;
+  font-size: 0.4em;
+  line-height: 1.7;
+  color: var(--gold-light);
+}
 .svh-sub {
   font-family: var(--serif);
   font-size: clamp(1.15rem, 2.6vw, 1.9rem);
@@ -601,6 +609,29 @@ h2 {
   .svh--loop .svh-stage { padding: 0; }
   .svh-panel--static { padding: 4.5rem 6vw 0; }
   .svh-cue { left: 6vw; bottom: 2rem; }
+
+  /* Phones scrub now too, but "left" versus "centre" means nothing at 390px:
+     object-fit crops the sides of the frame, so the clean space the side
+     placements aim at isn't there. Every beat centres instead. */
+  .svh-panel[data-v^="left"] .svh-panel-inner {
+    margin: 0 auto;
+    text-align: center;
+    max-width: 86vw;
+  }
+  .svh-panel[data-v^="left"] .svh-eyebrow { justify-content: center; }
+  .svh-panel[data-v^="left"] .svh-eyebrow::before { display: none; }
+  .svh-panel[data-v^="left"] .svh-sub { margin: 0 auto; max-width: 30rem; }
+  /* The low anchor of the last beat crowds the bottom edge on a phone —
+     centre it like the other beats. */
+  .svh-panel[data-v="left-low"] { align-self: center; padding-bottom: 0; }
+  /* With the type centred, the left-weighted pool would shade an empty
+     corner — keep the shade under the words. */
+  .svh-pool--left {
+    background: radial-gradient(ellipse 74% 52% at 50% 58%,
+      rgba(2,26,19,0.6) 0%,
+      rgba(2,26,19,0.28) 58%,
+      rgba(2,26,19,0) 82%);
+  }
 }
 
 /* ─── CONCEPT ─────────────────────────────────── */

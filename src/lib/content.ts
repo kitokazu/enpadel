@@ -29,13 +29,14 @@ export const content = {
         en: "Fourth Place Tokyo × EnPadel",
         ja: "Fourth Place Tokyo × EnPadel",
       },
+      /* Stacked lockup: name / × / name, with the × set as a divider. */
       nameHtml: {
-        en: "Fourth Place Tokyo × EnPadel",
-        ja: "Fourth Place Tokyo × EnPadel",
+        en: 'Fourth Place Tokyo<span class="svh-x">×</span>EnPadel',
+        ja: 'Fourth Place Tokyo<span class="svh-x">×</span>EnPadel',
       },
       meta: {
-        en: "@Padel Tokyo — Date TBD",
-        ja: "@パデル東京 — 日程未定",
+        en: "@Padel Tokyo — 11/8",
+        ja: "@パデル東京 — 11月8日",
       },
       desc: {
         en: "A curated padel & music experience.<br/>Sport, community, and connection — in one afternoon.",

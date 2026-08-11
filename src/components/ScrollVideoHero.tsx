@@ -60,7 +60,6 @@ const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
 function pickTier(): Tier {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const coarse = window.matchMedia("(hover: none), (max-width: 860px)").matches;
   const conn = (
     navigator as Navigator & {
       connection?: { saveData?: boolean; effectiveType?: string };
@@ -68,7 +67,10 @@ function pickTier(): Tier {
   ).connection;
   const slowLink = /(^|-)(2g|slow-2g)$/.test(conn?.effectiveType ?? "");
   const cores = navigator.hardwareConcurrency ?? 4;
-  if (reduce || coarse || conn?.saveData || slowLink || cores < 4) return "loop";
+  // Phones scrub too — the 854p all-keyframe encode is 2.5MB and one seek per
+  // frame is cheap. The loop tier is only for visitors who asked for less
+  // motion or less data, or hardware that can't decode a seek per frame.
+  if (reduce || conn?.saveData || slowLink || cores < 4) return "loop";
   return window.innerWidth > 1100 ? "scrub-hi" : "scrub-lo";
 }
 
@@ -96,7 +98,7 @@ export default function ScrollVideoHero({
     apply();
     const queries = [
       window.matchMedia("(prefers-reduced-motion: reduce)"),
-      window.matchMedia("(hover: none), (max-width: 860px)"),
+      window.matchMedia("(max-width: 1100px)"),
     ];
     queries.forEach((q) => q.addEventListener("change", apply));
     return () => queries.forEach((q) => q.removeEventListener("change", apply));
