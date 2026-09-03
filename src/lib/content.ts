@@ -11,15 +11,15 @@ export const content = {
     },
   },
   hero: {
-    eyebrow: { en: "Est. 2025 — Tokyo, Japan", ja: "2025年設立 — 東京" },
+    eyebrow: { en: "Est. 2025 · Tokyo, Japan", ja: "2025年設立・東京" },
     title: "EnPadel",
     sub: {
       en: "Building meaningful connections through padel.",
       ja: "パデルを通じて、意味のあるつながりを。",
     },
     jp: {
-      en: "縁 - Connection, through play",
-      ja: "縁 - Connection, through play",
+      en: "縁 · Connection, through play",
+      ja: "縁 · Connection, through play",
     },
     igCta: { en: "Follow Us on Instagram", ja: "Instagramでフォロー" },
     scroll: { en: "Scroll", ja: "スクロール" },
@@ -35,11 +35,11 @@ export const content = {
         ja: 'Fourth Place Tokyo<span class="svh-x">×</span>EnPadel',
       },
       meta: {
-        en: "@Padel Tokyo — 11/8",
-        ja: "@パデル東京 — 11月8日",
+        en: "@Padel Tokyo · 11/8",
+        ja: "@パデル東京・11月8日",
       },
       desc: {
-        en: "A curated padel & music experience.<br/>Sport, community, and connection — in one afternoon.",
+        en: "A curated padel & music experience.<br/>Sport, community and connection in one afternoon.",
         ja: "パデルと音楽が融合した特別な体験。<br/>スポーツ、コミュニティ、そしてつながり。",
       },
       cta: { en: "View Details", ja: "詳細を見る" },
@@ -53,7 +53,7 @@ export const content = {
       ja: "EnPadelを通じて「つながる場」を作る",
     },
     body: {
-      en: "縁(en) — a Japanese word carrying the deep meaning of human connection and fate. In Spanish, 'en' means 'in' or 'within'.",
+      en: "縁 (en) is a Japanese word carrying the deep meaning of human connection and fate. In Spanish, 'en' means 'in' or 'within'.",
       ja: '縁(en)という日本語には、「人と人とのつながり」や「ご縁」という深い意味があります。スペイン語では"en"は「〜に」「〜の中で」を意味します。',
     },
     highlight: {
@@ -69,11 +69,6 @@ export const content = {
       en: "A sport built on rhythm, connection, and shared moments.",
       ja: "パデルはスペイン発祥の急成長中のラケットスポーツで、テニスとスカッシュの要素を組み合わせています。社交的でアクセスしやすく、バックグラウンドを問わず始めやすいスポーツです。",
     },
-    mediaLabels: {
-      court: { en: "The Court", ja: "コート" },
-      gameplay: { en: "Gameplay", ja: "ゲームプレイ" },
-      equipment: { en: "Equipment", ja: "用具" },
-    },
     features: [
       {
         num: "01",
@@ -87,8 +82,8 @@ export const content = {
         num: "02",
         title: { en: "Social Sport", ja: "社交的なスポーツ" },
         desc: {
-          en: "Always played in doubles. Every match is a shared experience — padel is built for connection.",
-          ja: "常にダブルスで行われます。すべての試合が共有体験 — パデルはつながりのために設計されています。",
+          en: "Always played in doubles. Every match is a shared experience, and padel is built for connection.",
+          ja: "常にダブルスで行われます。すべての試合が共有体験であり、パデルはつながりのために設計されています。",
         },
       },
       {
@@ -124,7 +119,7 @@ export const content = {
         ja: "EnPadelは、コート内外で生まれる出会いや関係性を大切にし、単なるスポーツにとどまらない体験を提供します。",
       },
       {
-        en: "Rooted in Tokyo and inspired by global padel culture, we curate experiences that go beyond the game — blending sport, community, and lifestyle.",
+        en: "Rooted in Tokyo and inspired by global padel culture, we curate experiences that go beyond the game, blending sport, community and lifestyle.",
         ja: "東京を拠点に、グローバルなパデルカルチャーを取り入れながら、コミュニティとライフスタイルを融合させた場をデザインしています。",
       },
     ],
@@ -162,7 +157,7 @@ export const content = {
       },
     },
     desc: {
-      en: "A curated experience blending padel, music, and community. Designed for people who value meaningful encounters — an afternoon of sport followed by an evening of connection.",
+      en: "A curated experience blending padel, music, and community. Designed for people who value meaningful encounters: an afternoon of sport followed by an evening of connection.",
       ja: "パデル、音楽、コミュニティが融合した特別な体験。意味ある出会いを大切にする方のために設計された、スポーツの午後とつながりの夜。",
     },
     igCta: {
@@ -192,7 +187,7 @@ export const content = {
       en: "EnPadel Launch Session",
       ja: "EnPadel ローンチセッション",
     },
-    captionLoc: { en: "Tokyo — 2026", ja: "東京 — 2026" },
+    captionLoc: { en: "Tokyo · 2026", ja: "東京・2026" },
     cta: { en: "Join the Next Event", ja: "次のイベントに参加" },
     modalClose: { en: "Close", ja: "閉じる" },
   },
@@ -205,7 +200,7 @@ export const content = {
     label: { en: "Get in Touch", ja: "お問い合わせ" },
     heading: { en: "Contact", ja: "コンタクト" },
     intro: {
-      en: "For collaborations, events, or general inquiries — we would love to hear from you.",
+      en: "For collaborations, events, or general inquiries, we would love to hear from you.",
       ja: "コラボレーション、イベント、一般的なお問い合わせは、お気軽にご連絡ください。",
     },
     emailLabel: { en: "Email", ja: "メール" },
@@ -260,7 +255,7 @@ export const content = {
   },
   footer: {
     tag: {
-      en: "Creating meaningful connections through sport. コートの中での出会い。",
+      en: "Creating meaningful connections through sport.",
       ja: "スポーツを通じて意味ある縁を。コートの中での出会い。",
     },
     nav: { en: "Navigate", ja: "ナビゲーション" },
@@ -278,6 +273,42 @@ export const content = {
     },
   },
 } as const;
+
+/**
+ * Per-locale document metadata. Kept here rather than inline in the layout so
+ * the share card, the <title> and the page copy all read from one file.
+ *
+ * `ogTagline` is the single line set under the wordmark on the share card, so
+ * it has to stay short enough to fit one line at 1200px — see
+ * src/lib/og-card.tsx.
+ */
+export const meta: Record<Locale, {
+  title: string;
+  description: string;
+  ogLocale: string;
+  ogEyebrow: string;
+  ogTagline: string;
+  ogAlt: string;
+}> = {
+  en: {
+    title: "EnPadel · Connection, through play.",
+    description:
+      "A padel community in Tokyo. Events, courts and people, built around 縁, the connections made through the game.",
+    ogLocale: "en_US",
+    ogEyebrow: "EST. 2025 · TOKYO, JAPAN",
+    ogTagline: "Connection, through play.",
+    ogAlt: "EnPadel · Connection, through play.",
+  },
+  ja: {
+    title: "EnPadel · プレイを通じて、つながる。",
+    description:
+      "東京を拠点とするパデルコミュニティ。コートの中での出会いと、プレイを通じた関係性を大切にしています。",
+    ogLocale: "ja_JP",
+    ogEyebrow: "2025年設立・東京",
+    ogTagline: "プレイを通じて、つながる。",
+    ogAlt: "EnPadel · プレイを通じて、つながる。",
+  },
+};
 
 export function t(obj: { en: string; ja: string }, locale: Locale): string {
   return obj[locale];
