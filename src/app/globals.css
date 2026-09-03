@@ -12,19 +12,82 @@
   --text-dark:  #0d1f18;
   --text-mid:   #3a4f44;
   --text-muted: #7a8c82;
-  --serif: var(--font-serif, 'Cormorant Garamond'), Georgia, serif;
-  --sans:  var(--font-sans, 'DM Sans'), system-ui, sans-serif;
+  /* Two curves, not one. --ease is Material's standard in/out and stays on
+     state changes that go both ways — hovers, the nav background, a menu
+     opening and closing. --ease-entrance is an expo-out: it leaves fast and
+     lands slowly, which is what makes something arriving read as settling
+     rather than sliding. Entrances only; it looks wrong reversed. */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Type stacks ──
+     Latin first, Japanese second, so each script is served by a face drawn
+     for it: ASCII resolves to Cormorant / DM Sans and only Japanese falls
+     through to Shippori Mincho / Zen Kaku Gothic New.
+
+     The OS names and the terminating generic are NOT written here — they are
+     the tail of the two JP variables (see app/[locale]/layout.tsx). A generic
+     family is terminal in font matching, so anything after it is dead; one
+     appearing mid-stack, before the Japanese face, is what made /ja render in
+     Hiragino regardless of what loaded. */
+  /* Which face goes where, and the whole of it:
+       --stack-display  wordmark, h1/h2, card titles, the big numerals, the
+                        contact email, event values. Things you look AT.
+       --stack-text     sublines, taglines, captions, body, labels, controls.
+                        Things you READ.
+     Nothing is italic. Cormorant's italic was carrying sublines, captions and
+     pull-quotes in eight different places, which is what made a two-face
+     pairing read as four. Emphasis is weight 500 or colour, never slant. */
+  --stack-display: var(--font-serif), var(--font-jp-serif);
+  --stack-text:    var(--font-sans), var(--font-jp-sans);
+
+  /* ── Type scale ──
+     Eight steps, fluid between a 375px and a 1440px viewport. Every size on
+     the page resolves to one of these; no component sets a raw px or invents
+     its own clamp(). --t-mark is the ninth and last exception: the 縁 is an
+     ornament rather than type, and it is the only thing set larger than the
+     wordmark. */
+  --t-display: clamp(3.5rem, 1.5rem + 8.5vw, 7.5rem);
+  --t-mark:    clamp(6rem, 2rem + 17vw, 14rem);
+  --t-h1:      clamp(2.5rem, 1.4rem + 4.7vw, 5rem);
+  --t-h2:      clamp(2rem, 1.3rem + 3vw, 3.5rem);
+  --t-h3:      clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  /* --t-action exists because a label and a button are not the same job. An
+     eyebrow is read once at a glance and can sit small; a control has to be
+     hittable and legible under a cursor or a thumb, so it gets its own step
+     rather than borrowing the smallest one on the scale. */
+  --t-lead:    clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --t-body:    1rem;      /* 16px */
+  --t-small:   0.9375rem; /* 15px — captions, footer, nav */
+  --t-action:  0.8125rem; /* 13px — anything you click */
+  --t-eyebrow: 0.75rem;   /* 12px — labels you only read */
+
+  --lh-display: 0.95;
+  --lh-heading: 1.15;
+  --lh-body:    1.7;
+
+  --tr-display: -0.005em;
+  --tr-heading: -0.002em;
+  --tr-eyebrow:  0.14em;
+  --tr-body:     0;
+
+  /* The fixed nav's height, so anchor jumps and sticky offsets can agree. */
+  --header-h: 5.2rem;
 }
+@media (max-width: 960px) { :root { --header-h: 4.4rem; } }
 
 html { scroll-behavior: smooth; }
 body {
-  font-family: var(--sans);
+  font-family: var(--stack-text);
   background: var(--cream);
   color: var(--text-dark);
   overflow-x: hidden;
-  font-weight: 300;
-  line-height: 1.7;
+  /* Two weights on the whole site: 400 reads, 500 emphasises. No 300, no
+     700. */
+  font-weight: 400;
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--tr-body);
 }
 
 /* ─── NAV ─────────────────────────────────────── */
@@ -45,10 +108,11 @@ nav.scrolled {
   box-shadow: 0 1px 0 rgba(1,47,33,0.07);
 }
 .nav-logo {
-  font-family: var(--serif);
-  font-size: 1.35rem;
+  font-family: var(--stack-display);
+  font-size: var(--t-h3);
   font-weight: 500;
   color: var(--cream);
+  /* A wordmark, so it keeps its own open tracking rather than a heading's. */
   letter-spacing: 0.05em;
   text-decoration: none;
   transition: color 0.4s;
@@ -62,10 +126,10 @@ nav.scrolled .nav-logo { color: var(--green); }
   gap: 2.8rem;
   list-style: none;
 }
+/* One treatment for the nav, not three: sentence case at text size, the same
+   as the mobile overlay and the footer columns. */
 .nav-center a {
-  font-size: 0.73rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  font-size: var(--t-small);
   color: rgba(245,243,239,0.6);
   text-decoration: none;
   transition: color 0.3s;
@@ -103,18 +167,12 @@ nav.scrolled .nav-center a.nav-active { color: var(--green); }
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 .lang-btn {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--sans);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--stack-text);
   color: rgba(245,243,239,0.4);
   transition: color 0.25s;
   padding: 0;
@@ -128,7 +186,7 @@ nav.scrolled .lang-btn.active { color: var(--green); }
 nav.scrolled .lang-btn:hover { color: var(--green); }
 .lang-sep {
   color: rgba(245,243,239,0.2);
-  font-size: 0.6rem;
+  font-size: var(--t-eyebrow);
   line-height: 1;
 }
 nav.scrolled .lang-sep { color: rgba(1,47,33,0.2); }
@@ -146,50 +204,50 @@ nav.scrolled .nav-ig:hover { color: var(--green) !important; }
 
 /* ─── SHARED UTILITIES ──────────────────────────── */
 /* Anchor jumps would otherwise park section headings under the fixed nav. */
-section[id] { scroll-margin-top: 5rem; }
+/* Anchor jumps would otherwise park section headings under the fixed nav.
+   The heading carries its own margin as well as the section, because the
+   in-page links point at the section but the heading is what has to clear. */
+section[id] { scroll-margin-top: var(--header-h); }
+h1, h2, h3 { scroll-margin-top: calc(var(--header-h) + 1.5rem); }
 
 .section-label {
-  font-size: 0.65rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 1.4rem;
 }
 h2 {
-  font-family: var(--serif);
-  font-size: clamp(2.6rem, 5.5vw, 4.4rem);
-  font-weight: 300;
-  line-height: 1.08;
+  font-family: var(--stack-display);
+  font-size: var(--t-h1);
+  font-weight: 400;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--tr-heading);
   color: var(--green);
+  text-wrap: balance;
 }
 .reveal {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transition: opacity 0.75s var(--ease-entrance), transform 0.75s var(--ease-entrance);
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 .reveal-left {
   opacity: 0;
   transform: translateX(-24px);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transition: opacity 0.75s var(--ease-entrance), transform 0.75s var(--ease-entrance);
 }
 .reveal-left.visible { opacity: 1; transform: translateX(0); }
 .reveal-scale {
   opacity: 0;
   transform: scale(0.96);
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  transition: opacity 0.75s var(--ease-entrance), transform 0.75s var(--ease-entrance);
 }
 .reveal-scale.visible { opacity: 1; transform: scale(1); }
-.d1 { transition-delay: 0.1s; }
-.d2 { transition-delay: 0.22s; }
-.d3 { transition-delay: 0.34s; }
-.d4 { transition-delay: 0.46s; }
+.d1 { transition-delay: 0.07s; }
+.d2 { transition-delay: 0.15s; }
+.d3 { transition-delay: 0.23s; }
+.d4 { transition-delay: 0.31s; }
 
 .btn-cream {
   display: inline-block;
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--green);
   background: var(--cream);
   padding: 1rem 2.5rem;
@@ -211,9 +269,6 @@ h2 {
 
 .btn-green {
   display: inline-block;
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--cream);
   background: var(--green);
   padding: 1rem 2.5rem;
@@ -222,7 +277,7 @@ h2 {
   overflow: hidden;
   border: none;
   cursor: pointer;
-  font-family: var(--sans);
+  font-family: var(--stack-text);
 }
 .btn-green::before {
   content: '';
@@ -237,9 +292,6 @@ h2 {
 
 .btn-outline-cream {
   display: inline-block;
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--cream);
   border: 1px solid rgba(245,243,239,0.3);
   padding: 1rem 2.5rem;
@@ -261,7 +313,7 @@ h2 {
   background: var(--green-deep);
   z-index: 1;
 }
-.svh[data-ready="1"] { height: 520svh; }
+.svh[data-ready="1"] { height: 320svh; }
 
 .svh-sticky {
   position: sticky;
@@ -377,24 +429,27 @@ h2 {
 }
 
 .svh-eyebrow {
-  font-size: 0.78rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
   /* Plain --gold disappears against sunlit footage. */
   color: var(--gold-light);
   margin-bottom: 2.2rem;
   text-shadow: 0 1px 14px rgba(2,26,19,0.9);
 }
 .svh-title {
-  font-family: var(--serif);
-  font-size: clamp(3.2rem, 9vw, 9rem);
-  font-weight: 300;
+  font-family: var(--stack-display);
+  font-size: var(--t-display);
+  /* 400, like every other display line. The 300 hairline that used to sit
+     here was the last weight on the site that existed nowhere else, and at
+     120px Cormorant 400 is the steadier drawing anyway. */
+  font-weight: 400;
   color: var(--cream);
-  line-height: 0.96;
-  letter-spacing: -0.015em;
+  line-height: var(--lh-display);
+  letter-spacing: var(--tr-display);
   margin-bottom: 2rem;
   text-wrap: balance;
   word-break: auto-phrase;
+  /* auto-phrase alone will happily overflow a 390px frame when the whole line
+     is one phrase — this lets it break anyway rather than run off the edge. */
+  overflow-wrap: anywhere;
   text-shadow: 0 1px 30px rgba(2,26,19,0.55);
 }
 /* The × in the collab lockup: a divider between the two names, not a letter —
@@ -406,10 +461,9 @@ h2 {
   color: var(--gold-light);
 }
 .svh-sub {
-  font-family: var(--serif);
-  font-size: clamp(1.15rem, 2.6vw, 1.9rem);
-  font-weight: 300;
-  font-style: italic;
+  font-family: var(--stack-text);
+  font-size: var(--t-lead);
+  font-weight: 400;
   color: rgba(245,243,239,0.84);
   line-height: 1.55;
   max-width: 40rem;
@@ -418,6 +472,7 @@ h2 {
   /* Japanese otherwise wraps at any character and splits words like 共有体験
      across lines. Ignored by engines that don't support it. */
   word-break: auto-phrase;
+  overflow-wrap: anywhere;
   text-shadow: 0 1px 18px rgba(2,26,19,0.8);
 }
 .svh-cta {
@@ -425,9 +480,6 @@ h2 {
   align-items: center;
   gap: 0.7rem;
   margin-top: 2.6rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: rgba(245,243,239,0.72);
   text-decoration: none;
   border-bottom: 1px solid rgba(245,243,239,0.22);
@@ -468,14 +520,15 @@ h2 {
 
 /* Beat 2: 縁 as a symbol, not a headline. The largest thing in the piece. */
 .svh-panel[data-v="center-hero"] .svh-title {
-  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho',
-               'Noto Serif JP', var(--serif);
-  font-size: clamp(6rem, 17vw, 16rem);
-  line-height: 0.95;
+  /* No ad-hoc stack: --stack-display already resolves 縁 to Shippori Mincho,
+     because Cormorant has no Japanese and the JP face sits right behind it. */
+  font-family: var(--stack-display);
+  font-size: var(--t-mark);
+  line-height: var(--lh-display);
   margin-bottom: 2.2rem;
   text-shadow: 0 2px 60px rgba(2,26,19,0.6);
 }
-.svh-panel[data-v="center-hero"] .svh-sub { font-size: clamp(1.1rem, 2.2vw, 1.6rem); }
+.svh-panel[data-v="center-hero"] .svh-sub { font-size: var(--t-lead); }
 
 /* Beats 3–5 sit left, against the subject. */
 .svh-panel[data-v^="left"] .svh-panel-inner {
@@ -500,17 +553,21 @@ h2 {
 .svh-panel[data-v^="left"] .svh-sub,
 .svh-panel[data-v^="left"] .svh-title { margin-left: 0; margin-right: 0; }
 
-.svh-panel[data-v="left-lg"] .svh-title { font-size: clamp(3rem, 7.5vw, 7rem); }
+.svh-panel[data-v="left-lg"] .svh-title { font-size: var(--t-h1); }
 
 .svh-panel[data-v="left-md"] .svh-title {
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  font-size: var(--t-h2);
   margin-bottom: 1.5rem;
 }
+/* Beat four carries the longest line of the five, which is why it used to be
+   set in the sans at text size. That made it the only subline in the sequence
+   in a different face — four Cormorant italics and one DM Sans roman, which
+   reads as a mistake rather than as a caption. It keeps the smaller size and
+   the tighter measure (both of which the length actually needs) and rejoins
+   the other four on the face. */
 .svh-panel[data-v="left-md"] .svh-sub {
-  font-size: clamp(1rem, 1.7vw, 1.25rem);
-  font-style: normal;
-  font-family: var(--sans);
-  line-height: 1.8;
+  font-size: var(--t-body);
+  line-height: 1.75;
   max-width: 32rem;
 }
 
@@ -520,15 +577,17 @@ h2 {
   padding-bottom: 7rem;
 }
 .svh-panel[data-v="left-low"] .svh-title {
-  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-size: var(--t-h2);
   margin-bottom: 1.1rem;
 }
-.svh-panel[data-v="left-low"] .svh-sub { font-size: clamp(0.95rem, 1.5vw, 1.15rem); }
+.svh-panel[data-v="left-low"] .svh-sub { font-size: var(--t-body); }
 
 /* First panel gets the page's entrance cascade. */
-.svh-panel--first .svh-eyebrow { opacity: 0; animation: fadeUp 0.8s 0.35s forwards; }
-.svh-panel--first .svh-title   { opacity: 0; animation: fadeUp 1s 0.55s forwards; }
-.svh-panel--first .svh-sub     { opacity: 0; animation: fadeUp 0.9s 0.8s forwards; }
+/* The page's first impression, so it keeps a longer, more deliberate cascade
+   than the in-page reveals — but on the same entrance curve. */
+.svh-panel--first .svh-eyebrow { opacity: 0; animation: fadeUp 0.8s 0.35s var(--ease-entrance) forwards; }
+.svh-panel--first .svh-title   { opacity: 0; animation: fadeUp 1s 0.5s var(--ease-entrance) forwards; }
+.svh-panel--first .svh-sub     { opacity: 0; animation: fadeUp 0.9s 0.68s var(--ease-entrance) forwards; }
 
 /* ── Chrome ── */
 .svh-cue {
@@ -539,9 +598,6 @@ h2 {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 0.63rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: rgba(245,243,239,0.42);
 }
 .svh-cue-line {
@@ -601,10 +657,8 @@ h2 {
 @media (max-width: 860px) {
   /* Scrub tier only: loop mode flows normally and must keep height: auto,
      or the last beat overflows the section into the content below. */
-  .svh:not(.svh--loop)[data-ready="1"] { height: 420svh; }
+  .svh:not(.svh--loop)[data-ready="1"] { height: 300svh; }
   .svh-rail { display: none; }
-  .svh-title { font-size: clamp(2.8rem, 12vw, 5rem); }
-  .svh-sub { font-size: clamp(1.05rem, 4.2vw, 1.4rem); }
   .svh-stage { padding: 0 6vw; }
   .svh--loop .svh-stage { padding: 0; }
   .svh-panel--static { padding: 4.5rem 6vw 0; }
@@ -653,7 +707,7 @@ h2 {
   color: rgba(245,243,239,0.07);
   pointer-events: none;
   user-select: none;
-  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif JP', 'Times New Roman', serif;
+  font-family: var(--stack-display);
   font-weight: 400;
   letter-spacing: 0;
   white-space: nowrap;
@@ -679,25 +733,24 @@ h2 {
 .concept-section .section-label { color: var(--gold); }
 .concept-section h2 { color: var(--cream); margin-bottom: 1.4rem; }
 .concept-subline {
-  font-family: var(--serif);
-  font-size: 1.4rem;
-  font-style: italic;
+  font-family: var(--stack-text);
+  font-size: var(--t-lead);
   color: rgba(245,243,239,0.7);
   margin-bottom: 1.8rem;
   line-height: 1.65;
 }
 .concept-body {
   color: rgba(245,243,239,0.5);
-  font-size: 0.92rem;
+  font-size: var(--t-body);
   line-height: 1.95;
 }
 .concept-highlight {
   display: block;
   margin-top: 1.2rem;
   color: rgba(245,243,239,0.82);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.05rem;
+  font-family: var(--stack-text);
+  font-weight: 500;
+  font-size: var(--t-lead);
   line-height: 1.75;
 }
 .concept-visual {
@@ -728,12 +781,7 @@ h2 {
   gap: 1.2rem;
   background: rgba(10,74,51,0.28);
 }
-.c-frame-inner p {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(245,243,239,0.18);
-}
+.c-frame-inner p { color: rgba(245,243,239,0.18); }
 .c-frame-inner svg { opacity: 0.12; }
 .c-accent-line {
   position: absolute;
@@ -762,7 +810,7 @@ h2 {
 }
 .who-text h2 { margin-bottom: 2rem; }
 .who-body-en {
-  font-size: 0.95rem;
+  font-size: var(--t-body);
   color: var(--text-mid);
   line-height: 2;
   margin-bottom: 2rem;
@@ -773,9 +821,8 @@ h2 {
   margin-top: 2.5rem;
   padding-top: 2rem;
   border-top: 1px solid rgba(1,47,33,0.07);
-  font-family: var(--serif);
-  font-size: 1.25rem;
-  font-style: italic;
+  font-family: var(--stack-text);
+  font-size: var(--t-lead);
   color: var(--green);
   opacity: 0.55;
 }
@@ -858,8 +905,8 @@ h2 {
 .padel-desc {
   max-width: 380px;
   color: var(--text-muted);
-  font-size: 0.92rem;
-  line-height: 1.88;
+  font-size: var(--t-lead);
+  line-height: 1.7;
 }
 .padel-media {
   display: grid;
@@ -872,10 +919,6 @@ h2 {
   position: relative;
   overflow: hidden;
   background: linear-gradient(140deg, #e8e4dc, #dbd6cd);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 1rem;
 }
 .pm-box.tall { grid-row: span 2; }
 .pm-inner {
@@ -896,14 +939,6 @@ h2 {
   height: 100%;
   object-fit: cover;
 }
-.pm-label {
-  position: relative;
-  z-index: 1;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
 .features-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -918,9 +953,9 @@ h2 {
 }
 .fc:hover { background: var(--green-mid); }
 .fc-num {
-  font-family: var(--serif);
-  font-size: 3.5rem;
-  font-weight: 300;
+  font-family: var(--stack-display);
+  font-size: var(--t-h2);
+  font-weight: 400;
   color: rgba(245,243,239,0.055);
   line-height: 1;
   position: absolute;
@@ -928,14 +963,13 @@ h2 {
   right: 1.4rem;
 }
 .fc h3 {
-  font-family: var(--serif);
-  font-size: 1.2rem;
+  font-family: var(--stack-display);
+  font-size: var(--t-h3);
   color: var(--cream);
   margin-bottom: 0.7rem;
   font-weight: 400;
-  font-style: italic;
 }
-.fc p { font-size: 0.79rem; color: rgba(245,243,239,0.38); line-height: 1.85; }
+.fc p { font-size: var(--t-small); color: rgba(245,243,239,0.38); line-height: 1.85; }
 .fc::after {
   content: '';
   position: absolute;
@@ -963,9 +997,6 @@ h2 {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.66rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
   color: var(--gold);
   border: 1px solid rgba(184,154,106,0.28);
   padding: 0.38rem 0.9rem;
@@ -980,10 +1011,9 @@ h2 {
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
 .event-wrap h2 { margin-bottom: 0.35rem; }
 .ev-name {
-  font-family: var(--serif);
-  font-style: italic;
+  font-family: var(--stack-text);
   color: var(--text-muted);
-  font-size: 0.97rem;
+  font-size: var(--t-body);
   margin-bottom: 2.8rem;
 }
 .ev-meta {
@@ -997,15 +1027,12 @@ h2 {
 }
 .ev-meta-item label {
   display: block;
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: 0.3rem;
 }
 .ev-meta-item p {
-  font-family: var(--serif);
-  font-size: 1.05rem;
+  font-family: var(--stack-display);
+  font-size: var(--t-h3);
   color: var(--green);
   font-weight: 500;
 }
@@ -1019,7 +1046,7 @@ h2 {
   border-bottom-color: var(--green);
 }
 .ev-desc {
-  font-size: 0.88rem;
+  font-size: var(--t-body);
   color: var(--text-mid);
   line-height: 1.95;
   margin-bottom: 2.2rem;
@@ -1028,9 +1055,6 @@ h2 {
   display: inline-flex;
   align-items: center;
   gap: 0.7rem;
-  font-size: 0.73rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--green);
   text-decoration: none;
   border-bottom: 1px solid rgba(1,47,33,0.18);
@@ -1040,9 +1064,8 @@ h2 {
 .ev-ig-cta:hover { color: var(--green-mid); border-color: var(--gold); }
 .ev-collab {
   margin-top: 1.8rem;
-  font-size: 0.78rem;
+  font-size: var(--t-small);
   color: var(--text-muted);
-  font-style: italic;
   line-height: 1.7;
 }
 .ev-visual {
@@ -1067,34 +1090,30 @@ h2 {
   gap: 1rem;
 }
 .ev-visual-main svg { opacity: 0.16; }
-.ev-visual-main p {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
+.ev-visual-main p { color: var(--text-muted); }
+/* The accent card hanging off the photo's corner. 260px at 24px was too tight
+   for either locale: English broke 2 lines unevenly and Japanese ran to three
+   with a two-character orphan (「ティ」) on the last. 280px at --t-lead with
+   balanced wrapping gives both scripts two even lines. */
 .ev-floater {
   position: absolute;
   bottom: -3rem;
   right: -2rem;
   background: var(--green);
   padding: 2rem 2.2rem;
-  width: 260px;
+  width: 280px;
   z-index: 2;
 }
 .ev-floater-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
   color: var(--gold);
   margin-bottom: 0.45rem;
 }
 .ev-floater-text {
-  font-family: var(--serif);
-  font-size: 1.15rem;
+  font-family: var(--stack-display);
+  font-size: var(--t-lead);
   color: var(--cream);
-  font-style: italic;
   line-height: 1.5;
+  text-wrap: balance;
 }
 
 /* ─── PAST EVENTS ────────────────────────────── */
@@ -1109,15 +1128,16 @@ h2 {
 
 .past-ratio {
   position: relative;
-  width: 100%;
-  padding-bottom: 56.25%;
-  margin-bottom: 2.5rem;
+  width: min(360px, 76vw);
+  aspect-ratio: 9 / 16;
+  margin: 0 auto 2.5rem;
 }
 .past-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
   border: none;
   border-radius: 4px;
 }
@@ -1126,17 +1146,13 @@ h2 {
   margin-top: 0.5rem;
 }
 .past-caption-name {
-  font-family: var(--serif);
-  font-size: 1rem;
-  font-style: italic;
+  font-family: var(--stack-text);
+  font-size: var(--t-body);
   color: rgba(245,243,239,0.38);
   display: block;
   margin-bottom: 0.25rem;
 }
 .past-caption-loc {
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
   color: rgba(245,243,239,0.35);
 }
 .past-cta { margin-top: 4rem; }
@@ -1176,15 +1192,12 @@ h2 {
   background: none;
   border: none;
   color: rgba(245,243,239,0.42);
-  font-size: 0.7rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: color 0.25s;
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  font-family: var(--sans);
+  font-family: var(--stack-text);
 }
 .v-modal-close:hover { color: var(--cream); }
 
@@ -1205,13 +1218,8 @@ h2 {
   gap: 3rem 6rem;
 }
 .ig-section .section-label { color: var(--gold); }
-.ig-headline {
-  font-family: var(--serif);
-  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
-  font-weight: 300;
-  color: var(--green);
-  line-height: 1.1;
-}
+/* Nothing to declare: this is an <h2> and takes the h2 rule. Kept as a hook
+   for the reveal delay in the markup. */
 .ig-cta {
   display: flex;
   flex-direction: column;
@@ -1263,16 +1271,12 @@ h2 {
   border: 1px solid rgba(1,47,33,0.18);
   padding: 0.95rem 2rem;
   text-decoration: none;
-  font-size: 0.73rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   transition: all 0.3s;
 }
 .ig-link:hover { background: rgba(1,47,33,0.05); border-color: rgba(1,47,33,0.35); }
 .ig-handle {
-  font-family: var(--serif);
-  font-size: 1.2rem;
-  font-style: italic;
+  font-family: var(--stack-text);
+  font-size: var(--t-lead);
   color: var(--text-muted);
 }
 
@@ -1291,9 +1295,9 @@ h2 {
 }
 .contact-left h2 { margin-bottom: 2rem; }
 .contact-intro {
-  font-size: 0.92rem;
+  font-size: var(--t-lead);
   color: var(--text-muted);
-  line-height: 1.9;
+  line-height: 1.7;
   margin-bottom: 3rem;
 }
 .contact-email-row {
@@ -1301,15 +1305,10 @@ h2 {
   flex-direction: column;
   gap: 0.4rem;
 }
-.contact-email-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
+.contact-email-label { color: var(--text-muted); }
 .contact-email {
-  font-family: var(--serif);
-  font-size: 1.35rem;
+  font-family: var(--stack-display);
+  font-size: var(--t-h3);
   color: var(--green);
   text-decoration: none;
   position: relative;
@@ -1331,18 +1330,13 @@ h2 {
 .contact-form { display: flex; flex-direction: column; gap: 1.4rem; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
 .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
-.form-field label {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
+.form-field label { color: var(--text-muted); }
 .form-field input,
 .form-field textarea,
 .form-field select {
-  font-family: var(--sans);
-  font-size: 0.88rem;
-  font-weight: 300;
+  font-family: var(--stack-text);
+  font-size: var(--t-body);
+  font-weight: 400;
   color: var(--text-dark);
   background: transparent;
   border: none;
@@ -1373,12 +1367,11 @@ h2 {
   flex-wrap: wrap;
 }
 .form-note {
-  font-size: 0.75rem;
+  font-size: var(--t-small);
   color: var(--text-muted);
-  font-style: italic;
 }
 .form-error {
-  font-size: 0.72rem;
+  font-size: var(--t-small);
   color: #b85450;
   margin-top: 0.2rem;
 }
@@ -1418,28 +1411,25 @@ footer {
   max-width: 1100px;
 }
 .f-logo {
-  font-family: var(--serif);
-  font-size: 1.9rem;
+  font-family: var(--stack-display);
+  font-size: var(--t-h3);
   color: var(--cream);
   margin-bottom: 0.9rem;
   letter-spacing: 0.03em;
 }
 .f-tag {
-  font-size: 0.78rem;
+  font-size: var(--t-small);
   color: rgba(245,243,239,0.36);
   line-height: 1.9;
   max-width: 250px;
 }
 .f-col h4 {
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
   color: rgba(245,243,239,0.32);
   margin-bottom: 1.3rem;
 }
 .f-col a {
   display: block;
-  font-size: 0.82rem;
+  font-size: var(--t-small);
   color: rgba(245,243,239,0.38);
   text-decoration: none;
   margin-bottom: 0.65rem;
@@ -1453,14 +1443,14 @@ footer {
   justify-content: space-between;
   align-items: center;
 }
-.footer-bottom p { font-size: 0.71rem; color: rgba(245,243,239,0.32); }
+.footer-bottom p { font-size: var(--t-small); color: rgba(245,243,239,0.32); }
 .f-ig-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   color: rgba(245,243,239,0.32);
   text-decoration: none;
-  font-size: 0.71rem;
+  font-size: var(--t-small);
   transition: color 0.25s;
 }
 .f-ig-link:hover { color: var(--cream); }
@@ -1507,7 +1497,6 @@ footer {
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   .footer-bottom { flex-direction: column; gap: 1rem; }
   .past-section { padding: 6rem 3vw 7rem; }
-  .past-ratio { padding-bottom: 75%; }
 }
 
 /* ─── CUSTOM SELECT ──────────────────────────── */
@@ -1519,9 +1508,9 @@ footer {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  font-family: var(--sans);
-  font-size: 0.88rem;
-  font-weight: 300;
+  font-family: var(--stack-text);
+  font-size: var(--t-body);
+  font-weight: 400;
   color: var(--text-dark);
   background: transparent;
   border: none;
@@ -1562,7 +1551,7 @@ footer {
 }
 .cs-option {
   padding: 0.6rem 0.8rem;
-  font-size: 0.85rem;
+  font-size: var(--t-body);
   color: var(--text-mid);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
@@ -1574,7 +1563,7 @@ footer {
 }
 .cs-option.selected {
   color: var(--green);
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* ─── MOBILE MENU ────────────────────────────── */
@@ -1663,9 +1652,9 @@ nav.menu-open {
 .mobile-overlay.open .mn-item.d3 { transition-delay: 0.26s; }
 .mobile-overlay.open .mn-item.d4 { transition-delay: 0.34s; }
 .mn-item a {
-  font-family: var(--serif);
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: 300;
+  font-family: var(--stack-display);
+  font-size: var(--t-h2);
+  font-weight: 400;
   color: var(--cream);
   text-decoration: none;
   line-height: 1.4;
@@ -1686,7 +1675,7 @@ nav.menu-open {
   transform: translateY(0);
 }
 .mn-footer .lang-toggle { gap: 0.6rem; }
-.mn-footer .lang-btn { color: rgba(245,243,239,0.4); font-size: 0.75rem; }
+.mn-footer .lang-btn { color: rgba(245,243,239,0.4); }
 .mn-footer .lang-btn.active { color: var(--cream); }
 .mn-footer .lang-sep { color: rgba(245,243,239,0.2); }
 .mn-ig {
@@ -1695,7 +1684,7 @@ nav.menu-open {
   gap: 0.5rem;
   color: rgba(245,243,239,0.5);
   text-decoration: none;
-  font-size: 0.8rem;
+  font-size: var(--t-small);
   transition: color 0.25s;
 }
 .mn-ig:hover { color: var(--cream); }
@@ -1809,6 +1798,13 @@ nav:not(.scrolled) *:focus-visible {
 }
 .framed:hover img { transform: scale(1.03); filter: saturate(1) contrast(1.03); }
 
+/* <Picture> wraps every photo in <picture> to offer AVIF and WebP. That
+   element has no rendering of its own, and `display: contents` keeps it out of
+   the box tree entirely — so .pm-sketch stays the flex item, .concept-img
+   stays the direct child, and every selector written against `img` still
+   describes the thing that is actually laid out. */
+picture { display: contents; }
+
 /* Print, not web app. */
 .concept-visual,
 .ev-visual,
@@ -1831,30 +1827,36 @@ nav:not(.scrolled) *:focus-visible {
   flex-shrink: 0;
   background: var(--gold);
   opacity: 0.55;
-  transition: width 0.9s var(--ease) 0.15s;
+  transition: width 0.75s var(--ease-entrance) 0.12s;
 }
 .section-label.visible::before { width: 2.2rem; }
 
-/* 6. Reveals rack into focus rather than just sliding. */
-.reveal,
-.reveal-left,
-.reveal-scale { filter: blur(6px); }
+/* 6. Reveals rack into focus rather than just sliding.
+      blur() is the only property in this transition that repaints rather than
+      composites, so it is held to 4px and its layer is promoted only while the
+      element is still waiting — once .visible lands, will-change goes away and
+      the compositor can drop the layer instead of keeping ~30 of them alive
+      for the rest of the session. */
+.reveal:not(.visible),
+.reveal-left:not(.visible),
+.reveal-scale:not(.visible) {
+  filter: blur(4px);
+  will-change: opacity, transform, filter;
+}
 .reveal.visible,
 .reveal-left.visible,
 .reveal-scale.visible { filter: blur(0); }
 .reveal,
 .reveal-left,
 .reveal-scale {
-  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease),
-              filter 0.9s var(--ease);
+  transition: opacity 0.75s var(--ease-entrance),
+              transform 0.75s var(--ease-entrance),
+              filter 0.75s var(--ease-entrance);
 }
 
-/* 7. Headings art-directed rather than default. */
-h2 {
-  font-size: clamp(3rem, 6.5vw, 5.6rem);
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-}
+/* 7. Headings are declared once, at the top of this file, from the scale.
+      The second h2 block that used to live here is what made "one heading
+      size" five different sizes depending on which rule won. */
 
 /* ─── REDUCED MOTION ─────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -1880,4 +1882,133 @@ h2 {
     transform: none;
     animation: none;
   }
+}
+
+/* ─── ONE EYEBROW, ONE CONTROL ────────────────── */
+/* Every uppercase micro-label on the page: section labels, badges, form
+   labels, buttons, footer column headings, the scroll cue. These used to be
+   eleven sizes between 9.6px and 12.48px with eight different trackings,
+   because each section wrote its own. There is one now.
+   Weight 500 — the site's only emphasis weight — replaces the 700 that <h4>
+   was inheriting in the footer and the stray 400 on the Send button. */
+/* Labels — read, not clicked. */
+.section-label,
+.svh-eyebrow,
+.svh-cue,
+.ev-badge,
+.ev-meta-item label,
+.ev-visual-main p,
+.ev-floater-label,
+.c-frame-inner p,
+.past-caption-loc,
+.contact-email-label,
+.form-field label,
+.f-col h4 {
+  font-family: var(--stack-text);
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+/* Controls — same treatment, one step up, because 12px is fine to read and
+   small to hit. */
+.svh-cta,
+.btn-cream,
+.btn-green,
+.btn-outline-cream,
+.lang-toggle,
+.lang-btn,
+.ev-ig-cta,
+.v-modal-close,
+.ig-link {
+  font-family: var(--stack-text);
+  font-size: var(--t-action);
+  font-weight: 500;
+  letter-spacing: var(--tr-eyebrow);
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+/* ─── JAPANESE ────────────────────────────────── */
+/* The Latin faces cover no Japanese at all, so the second family in each
+   stack does all the work on /ja. What is left is everything Latin
+   typography does that Japanese typography does not.
+
+   Almost all of it is done by redefining scale tokens on the root rather
+   than by writing :lang(ja) rules per component. That matters for more than
+   tidiness: `:lang(ja)` matches EVERY element on the page (lang inherits), at
+   a specificity that beats a bare `h2` or `.svh-title` — so a blanket
+   `:lang(ja) { line-height }` silently reassigns body leading to the display
+   headings. Overriding the token instead leaves every component rule in
+   charge of its own role. */
+html:lang(ja) {
+  /* Japanese wants more leading than Latin at text sizes and much less of
+     the extra at display sizes, where the square body already fills the line. */
+  --lh-body:    1.85;
+  --lh-heading: 1.35;
+  --lh-display: 1.12;
+
+  /* Latin display tracking is drawn for Latin. Square-bodied glyphs want none
+     of it, and certainly none of the negative kind — the headings were
+     carrying up to -3.26px. */
+  --tr-display: 0.01em;
+  --tr-heading: 0.01em;
+  --tr-eyebrow: 0.08em;
+  --tr-body:    0.01em;
+
+  /* Uppercase is a Latin device, so the Japanese eyebrow separates itself by
+     size and colour instead — which means it needs a readable size. Controls
+     come up with it: 13px of kana is not a comfortable tap target. */
+  --t-eyebrow: 0.9375rem;
+  --t-action:  0.9375rem;
+
+  /* Proportional metrics: without palt, Japanese punctuation carries a full
+     em of air on both sides and the line looks gappy. */
+  font-feature-settings: "palt" 1;
+  line-break: strict;
+  /* Tightens the space around 「 」 and 。 at the start of a line. */
+  text-spacing-trim: trim-start;
+}
+/* Deliberately NOT `word-break: auto-phrase` here. It is a display-line
+   refinement, and setting it site-wide replaces Japanese's normal
+   break-between-any-two-characters behaviour with breaks only at phrase
+   boundaries — so a line Chrome reads as a single phrase has nowhere to break
+   and runs straight out of its box. It stays on the two hero lines below,
+   where the strings are short, with a guard. */
+
+/* Nothing here cancels italics any more: there are none to cancel. The site
+   has no `font-style: italic` at all, which is also the permanent fix for the
+   synthesised slant Japanese was getting — a rule that cannot be added back by
+   accident in one component. */
+
+/* text-transform does nothing to kana and kanji except leave them looking
+   undersized next to their tracking. */
+:lang(ja) .section-label,
+:lang(ja) .svh-eyebrow,
+:lang(ja) .svh-cue,
+:lang(ja) .svh-cta,
+:lang(ja) .btn-cream,
+:lang(ja) .btn-green,
+:lang(ja) .btn-outline-cream,
+:lang(ja) .ev-badge,
+:lang(ja) .ev-meta-item label,
+:lang(ja) .ev-floater-label,
+:lang(ja) .ev-ig-cta,
+:lang(ja) .past-caption-loc,
+:lang(ja) .ig-link,
+:lang(ja) .contact-email-label,
+:lang(ja) .form-field label,
+:lang(ja) .f-col h4 {
+  text-transform: none;
+}
+
+/* The language toggle is the exception: JP / EN are Latin abbreviations on
+   both locales, and they stay set as ones. */
+:lang(ja) .lang-toggle,
+:lang(ja) .lang-btn {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.8125rem;
 }

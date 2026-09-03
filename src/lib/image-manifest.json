@@ -1,0 +1,100 @@
+{
+  "/right-side-pic-web.jpg": {
+    "dir": "/img/v1",
+    "width": 1200,
+    "height": 1800,
+    "widths": [
+      320,
+      640,
+      960,
+      1200
+    ]
+  },
+  "/dj.jpg": {
+    "dir": "/img/v1",
+    "width": 1800,
+    "height": 1012,
+    "widths": [
+      320,
+      640,
+      960,
+      1400,
+      1800
+    ]
+  },
+  "/sketch1.png": {
+    "dir": "/img/v1",
+    "width": 1080,
+    "height": 1350,
+    "widths": [
+      320,
+      640,
+      960,
+      1080
+    ]
+  },
+  "/sketch2.png": {
+    "dir": "/img/v1",
+    "width": 1080,
+    "height": 1350,
+    "widths": [
+      320,
+      640,
+      960,
+      1080
+    ]
+  },
+  "/sketch3.png": {
+    "dir": "/img/v1",
+    "width": 1080,
+    "height": 1350,
+    "widths": [
+      320,
+      640,
+      960,
+      1080
+    ]
+  },
+  "/friends/trio-web.jpg": {
+    "dir": "/img/v1",
+    "width": 1400,
+    "height": 933,
+    "widths": [
+      320,
+      640,
+      960,
+      1400
+    ]
+  },
+  "/friends/table-web.jpg": {
+    "dir": "/img/v1",
+    "width": 815,
+    "height": 1100,
+    "widths": [
+      320,
+      640,
+      815
+    ]
+  },
+  "/friends/pair-web.jpg": {
+    "dir": "/img/v1",
+    "width": 934,
+    "height": 1400,
+    "widths": [
+      320,
+      640,
+      934
+    ]
+  },
+  "/friends/group-web.jpg": {
+    "dir": "/img/v1",
+    "width": 1400,
+    "height": 933,
+    "widths": [
+      320,
+      640,
+      960,
+      1400
+    ]
+  }
+}
