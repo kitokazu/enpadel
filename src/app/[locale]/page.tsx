@@ -10,6 +10,7 @@ import ScrollVideoHero, { type HeroPanel } from "@/components/ScrollVideoHero";
 import LazyVideo from "@/components/LazyVideo";
 import Parallax from "@/components/Parallax";
 import PhotoMarquee, { WHO_PHOTOS } from "@/components/PhotoMarquee";
+import Picture from "@/components/Picture";
 
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
@@ -108,13 +109,10 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
             </div>
           </div>
           <Parallax className="concept-visual framed reveal-scale d2">
-            <img
+            <Picture
               src="/right-side-pic-web.jpg"
               alt=""
-              width={1200}
-              height={1800}
-              loading="lazy"
-              decoding="async"
+              sizes="(max-width: 960px) 90vw, 530px"
               className="concept-img"
             />
           </Parallax>
@@ -133,16 +131,28 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           </div>
           <div className="padel-media">
             <div className="pm-box tall reveal">
-              <img src="/sketch1.png" alt="" width={800} height={800} loading="lazy" decoding="async" className="pm-sketch" />
-              <span className="pm-label">{t(c.padel.mediaLabels.equipment, locale)}</span>
+              <Picture
+                src="/sketch1.png"
+                alt=""
+                sizes="(max-width: 960px) 92vw, 700px"
+                className="pm-sketch"
+              />
             </div>
             <div className="pm-box reveal d1">
-              <img src="/sketch2.png" alt="" width={800} height={800} loading="lazy" decoding="async" className="pm-sketch" />
-              <span className="pm-label">{t(c.padel.mediaLabels.court, locale)}</span>
+              <Picture
+                src="/sketch2.png"
+                alt=""
+                sizes="(max-width: 960px) 92vw, 460px"
+                className="pm-sketch"
+              />
             </div>
             <div className="pm-box reveal d2">
-              <img src="/sketch3.png" alt="" width={800} height={800} loading="lazy" decoding="async" className="pm-sketch" />
-              <span className="pm-label">{t(c.padel.mediaLabels.gameplay, locale)}</span>
+              <Picture
+                src="/sketch3.png"
+                alt=""
+                sizes="(max-width: 960px) 92vw, 460px"
+                className="pm-sketch"
+              />
             </div>
           </div>
           <div className="features-row">
@@ -209,13 +219,10 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
               the corner and must stay outside the clip. */}
           <div className="ev-visual reveal-left d2">
             <div className="framed">
-              <img
+              <Picture
                 src="/dj.jpg"
                 alt=""
-                width={1800}
-                height={1012}
-                loading="lazy"
-                decoding="async"
+                sizes="(max-width: 960px) 90vw, 530px"
                 className="ev-photo"
               />
             </div>
@@ -234,8 +241,8 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <h2 className="reveal d1">{t(c.past.heading, locale)}</h2>
           <div className="past-ratio framed reveal d2">
             <LazyVideo
-              src="/enpadel-web.mp4"
-              poster="/enpadel-poster.jpg"
+              src="/media/v2/enpadel-web.mp4"
+              poster="/media/v2/enpadel-poster.jpg"
               className="past-video"
             />
           </div>
@@ -287,7 +294,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
               tabIndex={-1}
               aria-hidden="true"
             >
-              <img src={src} alt="" loading="lazy" decoding="async" />
+              <Picture src={src} alt="" sizes="(max-width: 960px) 31vw, 190px" />
               <span className="ig-tile-veil">
                 <InstagramIcon size={18} strokeWidth={1.5} />
               </span>

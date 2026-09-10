@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+/**
+ * Root layout renders nothing but its children: <html> and <body> live in
+ * app/[locale]/layout.tsx, which is the first place the locale is known.
+ *
+ * What stays here is the metadata that is identical on both locales — the
+ * icons and metadataBase. Per-locale title, description, canonical, hreflang
+ * and the share card are set in the locale layout and merge over these.
+ */
 export const metadata: Metadata = {
-  title: "EnPadel — Creating meaningful connections through sport.",
-  description: "EnPadel — Connection, through play. A community built around padel in Tokyo, Japan.",
+  // Absolute URLs for og:image, og:url and canonical are resolved against this.
+  metadataBase: new URL("https://www.enpadel.com"),
   icons: {
     icon: [
       { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },

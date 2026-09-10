@@ -8,6 +8,8 @@
  * The reel itself is the photo list doubled — with only four photos, one pass
  * is narrower than a wide viewport and the wrap point would flash a gap.
  */
+import Picture from "@/components/Picture";
+
 export type MarqueePhoto = {
   src: string;
   /** Natural pixel size — sets the print's aspect so nothing is cropped. */
@@ -29,15 +31,16 @@ export default function PhotoMarquee({ photos }: { photos: MarqueePhoto[] }) {
     // repeats itself, so screen readers skip the whole thing.
     <div className="marquee" aria-hidden="true">
       <div className="marquee-track">
+        {/* sizes: fixed height / natural width means a landscape print is
+            about 510px across at the reel's tallest, a portrait one ~250px. */}
         {[...reel, ...reel].map((photo, i) => (
           <figure className="marquee-print" key={i}>
-            <img
+            <Picture
               src={photo.src}
               alt=""
               width={photo.width}
               height={photo.height}
-              loading="lazy"
-              decoding="async"
+              sizes="(max-width: 960px) 460px, 520px"
             />
           </figure>
         ))}

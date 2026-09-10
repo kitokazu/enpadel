@@ -39,12 +39,21 @@ export type HeroPanel = {
 type Tier = "scrub-hi" | "scrub-lo" | "loop";
 
 const SRC: Record<Tier, string> = {
-  "scrub-hi": "/scroll-hero-1280.mp4",
-  "scrub-lo": "/scroll-hero-854.mp4",
-  loop: "/scroll-hero-loop.mp4",
+  "scrub-hi": "/media/v2/scroll-hero-1280.mp4",
+  "scrub-lo": "/media/v2/scroll-hero-854.mp4",
+  loop: "/media/v2/scroll-hero-loop.mp4",
 };
 
-const FPS = 24;
+const POSTER = "/media/v2/scroll-hero-poster.jpg";
+
+/**
+ * Frame rate of the two SCRUB tiers only — the loop tier stays at 24fps
+ * because it is actually played. Scroll ties frames to distance rather than to
+ * time, so half the frames are invisible here, and dropping them is what paid
+ * for the much lower CRF: same bytes, better picture. Must match the `fps=`
+ * filter in scripts/encode-hero-video.sh.
+ */
+const FPS = 12;
 /**
  * Panels do not crossfade through each other: a beat fades out completely,
  * a sliver of pure footage plays, then the next fades in. Two legible headings
@@ -261,7 +270,7 @@ export default function ScrollVideoHero({
     >
       <div className="svh-sticky">
         <img
-          src="/scroll-hero-poster.jpg"
+          src={POSTER}
           alt=""
           aria-hidden="true"
           className={`svh-poster${painted ? " is-hidden" : ""}`}
@@ -272,7 +281,7 @@ export default function ScrollVideoHero({
             ref={videoRef}
             className={`svh-video${painted ? " is-ready" : ""}`}
             src={SRC[tier]}
-            poster="/scroll-hero-poster.jpg"
+            poster={POSTER}
             preload={isLoop ? "metadata" : "auto"}
             muted
             playsInline
