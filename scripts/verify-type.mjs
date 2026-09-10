@@ -100,7 +100,7 @@ console.log("  horizontal overflow:", stats.overflow ? "YES" : "no");
 
 const fail = [];
 if (stats.lang === "ja" && stats.italics.length) fail.push("Japanese is being set in italic (no JP face has one — the browser is skewing glyphs)");
-if (stats.weights.some((w) => !["400", "500"].includes(w))) fail.push(`unexpected weight(s): ${stats.weights.join(", ")} — the site uses 400 and 500 only`);
+if (stats.weights.some((w) => !["300", "400", "500"].includes(w))) fail.push(`unexpected weight(s): ${stats.weights.join(", ")} — the site uses 300, 400 and 500`);
 if (stats.errored.length) fail.push(`font faces failed to load: ${stats.errored.join(", ")}`);
 if (stats.overflow) fail.push("page scrolls horizontally");
 ws.close();

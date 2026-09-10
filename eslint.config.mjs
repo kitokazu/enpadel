@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The design handoff bundle: a vendored HTML/JS design reference, not
+    // source. It is here to compare against, not to ship or to lint.
+    "references/**",
   ]),
 ]);
 

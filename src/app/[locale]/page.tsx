@@ -1,17 +1,26 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/lib/content";
 import { content, t } from "@/lib/content";
 import InstagramIcon from "@/components/InstagramIcon";
 import NavScroll from "@/components/NavScroll";
-import RevealObserver from "@/components/RevealObserver";
+import Reveal from "@/components/Reveal";
 import ContactForm from "@/components/ContactForm";
 import MobileMenu from "@/components/MobileMenu";
 import ScrollVideoHero, { type HeroPanel } from "@/components/ScrollVideoHero";
-import LazyVideo from "@/components/LazyVideo";
-import Parallax from "@/components/Parallax";
+import ArchiveVideo from "@/components/ArchiveVideo";
+import Heading from "@/components/Heading";
 import PhotoMarquee, { WHO_PHOTOS } from "@/components/PhotoMarquee";
-import Picture from "@/components/Picture";
 
+/** The six photos in the feed preview, in grid order. */
+const IG_TILES = [
+  "/friends/trio-web.jpg",
+  "/dj.jpg",
+  "/friends/pair-web.jpg",
+  "/right-side-pic-web.jpg",
+  "/friends/group-web.jpg",
+  "/friends/table-web.jpg",
+];
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
@@ -63,23 +72,29 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
     },
   ];
 
+  const label = (text: string) => (
+    <p className="section-label" data-label="">
+      <span>{text}</span>
+    </p>
+  );
+
   return (
     <>
       <NavScroll />
-      <RevealObserver />
+      <Reveal />
 
       {/* ─── NAV ─── */}
       <nav id="nav">
-        <Link href={`/${locale}`} className="nav-logo">
+        <Link href={`/${locale}`} className="nav-logo" data-nav-item="">
           {c.nav.logo}
         </Link>
         <ul className="nav-center">
-          <li><a href="#padel">{t(c.nav.links.padel, locale)}</a></li>
-          <li><a href="#who">{t(c.nav.links.who, locale)}</a></li>
-          <li><a href="#event">{t(c.nav.links.events, locale)}</a></li>
-          <li><a href="#contact">{t(c.nav.links.contact, locale)}</a></li>
+          <li data-nav-item=""><a href="#padel">{t(c.nav.links.padel, locale)}</a></li>
+          <li data-nav-item=""><a href="#who">{t(c.nav.links.who, locale)}</a></li>
+          <li data-nav-item=""><a href="#event">{t(c.nav.links.events, locale)}</a></li>
+          <li data-nav-item=""><a href="#contact">{t(c.nav.links.contact, locale)}</a></li>
         </ul>
-        <div className="nav-right">
+        <div className="nav-right" data-nav-item="">
           <div className="lang-toggle">
             <Link href="/ja" className={`lang-btn${locale === "ja" ? " active" : ""}`}>JP</Link>
             <span className="lang-sep">|</span>
@@ -97,68 +112,79 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
       {/* ─── CONCEPT ─── */}
       <section className="concept-section" id="concept">
-        <div className="concept-en-bg">縁</div>
-        <div className="concept-grid">
+        <div className="concept-en-bg" data-parallax="60" aria-hidden="true">縁</div>
+        <div className="concept-grid grid-2">
           <div className="concept-text">
-            <p className="section-label reveal">{t(c.concept.label, locale)}</p>
-            <h2 className="reveal d1">{t(c.concept.heading, locale)}</h2>
-            <p className="concept-subline reveal d2">{t(c.concept.subline, locale)}</p>
-            <div className="concept-body reveal-left d3">
+            {label(t(c.concept.label, locale))}
+            <Heading html={t(c.concept.heading, locale)} />
+            <p className="concept-subline" data-pop="">{t(c.concept.subline, locale)}</p>
+            <div className="concept-body" data-stagger="">
               <p>{t(c.concept.body, locale)}</p>
               <span className="concept-highlight">{t(c.concept.highlight, locale)}</span>
             </div>
           </div>
-          <Parallax className="concept-visual framed reveal-scale d2">
-            <Picture
-              src="/right-side-pic-web.jpg"
-              alt=""
-              sizes="(max-width: 960px) 90vw, 530px"
-              className="concept-img"
-            />
-          </Parallax>
+          {/* Wipes in from the right; the picture drifts against the scroll
+              inside it, so the two transforms never fight over one element. */}
+          <div className="concept-visual framed" data-wipe="right">
+            <div className="par" data-parallax="30">
+              <Image
+                src="/right-side-pic-web.jpg"
+                alt=""
+                fill
+                sizes="(max-width: 860px) 100vw, 50vw"
+                className="concept-img"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ─── WHAT IS PADEL ─── */}
       <section className="padel-section" id="padel">
         <div className="padel-wrap">
-          <div className="padel-head">
+          <div className="padel-head grid-2">
             <div>
-              <p className="section-label reveal">{t(c.padel.label, locale)}</p>
-              <h2 className="reveal d1" dangerouslySetInnerHTML={{ __html: t(c.padel.headingHtml, locale) }} />
+              {label(t(c.padel.label, locale))}
+              <Heading html={t(c.padel.headingHtml, locale)} />
             </div>
-            <p className="padel-desc reveal d2">{t(c.padel.desc, locale)}</p>
+            <div>
+              <p className="padel-lead" data-pop="">{t(c.padel.desc, locale)}</p>
+              {/* The media labels set an index line here rather than captions
+                  printed over the artwork. */}
+              <p className="padel-index" data-pop="">
+                <span>{t(c.padel.mediaLabels.equipment, locale)}</span>
+                <span className="sep" aria-hidden="true">·</span>
+                <span>{t(c.padel.mediaLabels.court, locale)}</span>
+                <span className="sep" aria-hidden="true">·</span>
+                <span>{t(c.padel.mediaLabels.gameplay, locale)}</span>
+              </p>
+            </div>
           </div>
+
           <div className="padel-media">
-            <div className="pm-box tall reveal">
-              <Picture
-                src="/sketch1.png"
-                alt=""
-                sizes="(max-width: 960px) 92vw, 700px"
-                className="pm-sketch"
-              />
-            </div>
-            <div className="pm-box reveal d1">
-              <Picture
-                src="/sketch2.png"
-                alt=""
-                sizes="(max-width: 960px) 92vw, 460px"
-                className="pm-sketch"
-              />
-            </div>
-            <div className="pm-box reveal d2">
-              <Picture
-                src="/sketch3.png"
-                alt=""
-                sizes="(max-width: 960px) 92vw, 460px"
-                className="pm-sketch"
-              />
-            </div>
+            {[
+              { src: "/sketch1.png", text: t(c.padel.mediaLabels.equipment, locale) },
+              { src: "/sketch2.png", text: t(c.padel.mediaLabels.court, locale) },
+              { src: "/sketch3.png", text: t(c.padel.mediaLabels.gameplay, locale) },
+            ].map((tile) => (
+              <div className="pm-box framed" key={tile.src} data-wipe="bottom" data-tilt="">
+                <Image
+                  src={tile.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 860px) 100vw, 33vw"
+                  className="pm-sketch"
+                />
+                <span className="pm-label">{tile.text}</span>
+              </div>
+            ))}
           </div>
+
+          {/* Four hairline rows instead of four dark cards. */}
           <div className="features-row">
             {c.padel.features.map((f) => (
-              <div className="fc reveal" key={f.num}>
-                <div className="fc-num">{f.num}</div>
+              <div className="fc" key={f.num} data-pop="">
+                <div className="fc-num" data-count={f.num}>00</div>
                 <h3>{t(f.title, locale)}</h3>
                 <p>{t(f.desc, locale)}</p>
               </div>
@@ -170,63 +196,95 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       {/* ─── WHO WE ARE ─── */}
       <section className="who-section" id="who">
         <div className="who-wrap">
-          <div className="who-text">
-            <p className="section-label reveal">{t(c.who.label, locale)}</p>
-            <h2 className="reveal d1" dangerouslySetInnerHTML={{ __html: t(c.who.headingHtml, locale) }} />
-            <div className="who-body-en reveal d2">
-              {c.who.body.map((p, i) => (
-                <p key={i}>{t(p, locale)}</p>
-              ))}
+          <div className="who-text grid-2">
+            <div>
+              {label(t(c.who.label, locale))}
+              <Heading html={t(c.who.headingHtml, locale)} />
             </div>
-            <p className="who-tagline reveal d3">{t(c.who.tagline, locale)}</p>
+            <div>
+              <div className="who-body-en" data-stagger="">
+                {c.who.body.map((p, i) => (
+                  <p key={i}>{t(p, locale)}</p>
+                ))}
+              </div>
+              <p className="who-tagline" data-pop="">{t(c.who.tagline, locale)}</p>
+            </div>
           </div>
+        </div>
+        {/* Full-bleed strip below the copy, drifting on its own. No scroll
+            coupling — it is a reel, not a scrubbed element. */}
+        <div className="who-reel">
           <PhotoMarquee photos={WHO_PHOTOS} />
         </div>
       </section>
 
-      {/* ─── FIRST EVENT ─── */}
+      {/* ─── NEXT EVENT ─── */}
       <section className="event-section" id="event">
         <div className="event-wrap">
-          <div>
-            <div className="ev-badge reveal">
-              <div className="ev-dot" />
-              <span>{t(c.event.badge, locale)}</span>
+          <div className="event-top grid-2">
+            <div>
+              <div className="ev-badge" data-pop="">
+                <div className="ev-dot" />
+                <span>{t(c.event.badge, locale)}</span>
+              </div>
+              <Heading html={t(c.event.headingHtml, locale)} />
+              <p className="ev-name" data-pop="">{t(c.event.name, locale)}</p>
+              <p className="ev-desc" data-pop="">{t(c.event.desc, locale)}</p>
             </div>
-            <h2 className="reveal d1" dangerouslySetInnerHTML={{ __html: t(c.event.headingHtml, locale) }} />
-            <p className="ev-name reveal d2">{t(c.event.name, locale)}</p>
-            <div className="ev-meta reveal d2">
-              <div className="ev-meta-item">
-                <label>{t(c.event.meta.eventName.label, locale)}</label>
-                <p>{t(c.event.meta.eventName.value, locale)}</p>
+
+            <div>
+              <div className="ev-meta" data-stagger="">
+                <div className="ev-meta-item">
+                  <label>{t(c.event.meta.eventName.label, locale)}</label>
+                  <p>{t(c.event.meta.eventName.value, locale)}</p>
+                </div>
+                <div className="ev-meta-item">
+                  <label>{t(c.event.meta.date.label, locale)}</label>
+                  <p>{t(c.event.meta.date.value, locale)}</p>
+                </div>
+                <div className="ev-meta-item">
+                  <label>{t(c.event.meta.location.label, locale)}</label>
+                  <p>
+                    <a
+                      href="https://maps.app.goo.gl/oLPtnYDY9ZTZaxwB7"
+                      target="_blank"
+                      rel="noopener"
+                      className="ev-location-link"
+                    >
+                      {t(c.event.meta.location.value, locale)}
+                    </a>
+                  </p>
+                </div>
               </div>
-              <div className="ev-meta-item">
-                <label>{t(c.event.meta.date.label, locale)}</label>
-                <p>{t(c.event.meta.date.value, locale)}</p>
+
+              <div className="ev-cta-row" data-pop="">
+                <a href="#contact" className="btn-cream" data-magnet="">
+                  {t(c.contact.label, locale)}
+                </a>
+                <a href="https://instagram.com/enpadel" className="ev-ig-cta" target="_blank" rel="noopener">
+                  <InstagramIcon size={15} strokeWidth={1.5} />
+                  <span>{t(c.event.igCta, locale)}</span>
+                </a>
               </div>
-              <div className="ev-meta-item" style={{ gridColumn: "span 2" }}>
-                <label>{t(c.event.meta.location.label, locale)}</label>
-                <p><a href="https://maps.app.goo.gl/oLPtnYDY9ZTZaxwB7" target="_blank" rel="noopener" className="ev-location-link">{t(c.event.meta.location.value, locale)}</a></p>
-              </div>
+              <p className="ev-collab" data-pop="">{t(c.event.collab, locale)}</p>
             </div>
-            <p className="ev-desc reveal d3">{t(c.event.desc, locale)}</p>
-            <a href="https://instagram.com/enpadel" className="ev-ig-cta reveal d4" target="_blank" rel="noopener">
-              <InstagramIcon size={15} strokeWidth={1.5} />
-              <span>{t(c.event.igCta, locale)}</span>
-            </a>
-            <p className="ev-collab reveal d4">{t(c.event.collab, locale)}</p>
           </div>
-          {/* framed clips (and zooms) only the photo; the floater hangs over
-              the corner and must stay outside the clip. */}
-          <div className="ev-visual reveal-left d2">
-            <div className="framed">
-              <Picture
-                src="/dj.jpg"
-                alt=""
-                sizes="(max-width: 960px) 90vw, 530px"
-                className="ev-photo"
-              />
+
+          <div className="ev-visual">
+            <div className="ev-photo-frame framed" data-wipe="left">
+              <div className="par" data-parallax="30">
+                <Image
+                  src="/dj.jpg"
+                  alt=""
+                  fill
+                  sizes="(max-width: 860px) 100vw, 90vw"
+                  className="ev-photo"
+                />
+              </div>
             </div>
-            <div className="ev-floater">
+            {/* Anchored over the corner on desktop; a caption underneath on a
+                phone, where overlapping the photo just hides both. */}
+            <div className="ev-floater" data-pop="">
               <p className="ev-floater-label">{t(c.event.floater.label, locale)}</p>
               <p className="ev-floater-text">{t(c.event.floater.text, locale)}</p>
             </div>
@@ -237,21 +295,25 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       {/* ─── PAST EVENTS ─── */}
       <section className="past-section" id="past">
         <div className="past-wrap">
-          <p className="section-label reveal">{t(c.past.label, locale)}</p>
-          <h2 className="reveal d1">{t(c.past.heading, locale)}</h2>
-          <div className="past-ratio framed reveal d2">
-            <LazyVideo
+          <div className="past-copy">
+            <div>
+              {label(t(c.past.label, locale))}
+              <Heading html={t(c.past.heading, locale)} />
+            </div>
+            <div className="past-caption" data-pop="">
+              <span className="past-caption-name">{t(c.past.captionName, locale)}</span>
+              <span className="past-caption-loc">{t(c.past.captionLoc, locale)}</span>
+            </div>
+            <a href="#event" className="btn-outline-cream" data-pop="">
+              {t(c.past.cta, locale)}
+            </a>
+          </div>
+          <div className="past-ratio framed" data-wipe="bottom">
+            <ArchiveVideo
               src="/media/v2/enpadel-web.mp4"
               poster="/media/v2/enpadel-poster.jpg"
               className="past-video"
             />
-          </div>
-          <div className="past-caption reveal d3">
-            <span className="past-caption-name">{t(c.past.captionName, locale)}</span>
-            <span className="past-caption-loc">{t(c.past.captionLoc, locale)}</span>
-          </div>
-          <div className="past-cta reveal d4">
-            <a href="#event" className="btn-outline-cream">{t(c.past.cta, locale)}</a>
           </div>
         </div>
       </section>
@@ -260,11 +322,17 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       <section className="ig-section" id="community">
         <div className="ig-inner">
           <div>
-            <p className="section-label reveal">{t(c.ig.label, locale)}</p>
-            <h2 className="ig-headline reveal d1" dangerouslySetInnerHTML={{ __html: t(c.ig.headlineHtml, locale) }} />
+            {label(t(c.ig.label, locale))}
+            <Heading html={t(c.ig.headlineHtml, locale)} className="ig-headline" />
           </div>
-          <div className="ig-cta reveal d2">
-            <a href="https://instagram.com/enpadel" className="ig-link" target="_blank" rel="noopener">
+          <div className="ig-cta" data-pop="">
+            <a
+              href="https://instagram.com/enpadel"
+              className="btn-solid-green"
+              target="_blank"
+              rel="noopener"
+              data-magnet=""
+            >
               <InstagramIcon size={16} strokeWidth={1.5} />
               <span>{t(c.ig.linkText, locale)}</span>
             </a>
@@ -273,18 +341,10 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         </div>
         {/* A designed preview of the feed, not a live embed: instagram.com
             cannot be iframed and the official embeds ship Instagram's own
-            script and card chrome. Six of our photos as grid tiles, each
-            linking through. Decorative duplicates of the main link above, so
+            script and card chrome. Decorative duplicates of the link above, so
             they are skipped by keyboard and screen readers. */}
-        <div className="ig-grid reveal d3">
-          {[
-            "/friends/trio-web.jpg",
-            "/dj.jpg",
-            "/friends/pair-web.jpg",
-            "/right-side-pic-web.jpg",
-            "/friends/group-web.jpg",
-            "/friends/table-web.jpg",
-          ].map((src) => (
+        <div className="ig-grid">
+          {IG_TILES.map((src) => (
             <a
               key={src}
               href="https://instagram.com/enpadel"
@@ -294,7 +354,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
               tabIndex={-1}
               aria-hidden="true"
             >
-              <Picture src={src} alt="" sizes="(max-width: 960px) 31vw, 190px" />
+              <Image src={src} alt="" fill sizes="(max-width: 600px) 50vw, 16vw" />
               <span className="ig-tile-veil">
                 <InstagramIcon size={18} strokeWidth={1.5} />
               </span>
@@ -307,15 +367,15 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       <section className="contact-section" id="contact">
         <div className="contact-wrap">
           <div className="contact-left">
-            <p className="section-label reveal">{t(c.contact.label, locale)}</p>
-            <h2 className="reveal d1">{t(c.contact.heading, locale)}</h2>
-            <p className="contact-intro reveal d2">{t(c.contact.intro, locale)}</p>
-            <div className="contact-email-row reveal d3">
+            {label(t(c.contact.label, locale))}
+            <Heading html={t(c.contact.heading, locale)} />
+            <p className="contact-intro" data-pop="">{t(c.contact.intro, locale)}</p>
+            <div className="contact-email-row" data-pop="">
               <span className="contact-email-label">{t(c.contact.emailLabel, locale)}</span>
               <a href="mailto:info@enpadel.com" className="contact-email">info@enpadel.com</a>
             </div>
           </div>
-          <div className="contact-right reveal d2">
+          <div className="contact-right" data-pop="">
             <ContactForm locale={locale} />
           </div>
         </div>

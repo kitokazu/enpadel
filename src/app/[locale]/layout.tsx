@@ -8,16 +8,9 @@ import {
 import { meta, type Locale } from "@/lib/content";
 
 /* ── Latin ──
-   Cormorant Garamond for display, DM Sans for text — the site's original
-   pairing, kept on the client's call after Young Serif + Switzer was trialled
-   and rejected. What is NOT restored along with them is how they were being
-   used: no italics anywhere, two weights instead of five, one type scale
-   instead of fifty-two ad-hoc sizes. The faces were never the problem; the
-   settings were.
-
-   Two weights and no italic loaded, because the site sets neither. Keeping the
-   300 and italic faces available is how a stray `font-style: italic` in one
-   component quietly reintroduces them.
+   Weights and italics per the design handoff: Cormorant 300/400/500 with
+   italics for the leads, DM Sans 300/400 with italic. The redesign sets its
+   display type at 300 and its leads in serif italic, so both are loaded again.
 
    No `fallback` array on either, deliberately. next/font bakes it into the CSS
    variable, and a generic family (`serif`, `sans-serif`) is TERMINAL in font
@@ -27,16 +20,16 @@ import { meta, type Locale } from "@/lib/content";
    JP stacks below. */
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
 });
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal"],
+  weight: ["300", "400"],
+  style: ["normal", "italic"],
   variable: "--font-sans",
   display: "swap",
 });
