@@ -4,10 +4,9 @@ import type { NextConfig } from "next";
  * Media in /public is served by Vercel with `max-age=0, must-revalidate` by
  * default, which meant re-validating ~12MB of video on every visit.
  *
- * Everything this project generates now lives under a versioned directory —
- * /media/v2 for the video and its posters, /img/v1 for the AVIF and WebP
- * derivatives — so the URL changes whenever the bytes do and those two trees
- * can be cached hard for a year. The version is a path segment rather than a
+ * The video and its posters live under a versioned directory — /media/v2 —
+ * so the URL changes whenever the bytes do and the tree can be cached hard for
+ * a year. Photos go through next/image, which sets its own cache headers. The version is a path segment rather than a
  * filename suffix so the match here is a plain prefix and never has to reason
  * about which dot in a filename is the extension.
  *
@@ -21,6 +20,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   experimental: {
     viewTransition: true,
+  },
+  images: {
+    // next/image negotiates these per request now, replacing the
+    // pre-generated /img derivatives the <Picture> component used to serve.
+    formats: ["image/avif", "image/webp"],
   },
   async headers() {
     return [
@@ -39,7 +43,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/:tree(media|img)/:version/:path*",
+        source: "/media/:version/:path*",
         headers: [
           {
             key: "Cache-Control",

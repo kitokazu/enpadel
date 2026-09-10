@@ -102,15 +102,37 @@ export default function ScrollVideoHero({
 
   // Tier detection is client-only. The server renders no video and no tier, so
   // the first client render matches it exactly and there is nothing to mismatch.
+  //
+  // The first pick waits until the page has finished loading, then for an idle
+  // moment. The scrub tier is ~2MB and `preload="auto"`, so attaching src
+  // during hydration puts it in direct competition with the hero poster —
+  // which is the LCP element. On a throttled mobile connection that pushed LCP
+  // past 5s. Waiting costs nothing visible: the poster is already on screen,
+  // and the scroll track only opens on loadedmetadata, which has its own
+  // backstop.
   useEffect(() => {
     const apply = () => setTier(pickTier());
-    apply();
+    let idle: number | undefined;
+    const schedule = () => {
+      idle = window.requestIdleCallback
+        ? window.requestIdleCallback(apply, { timeout: 1200 })
+        : window.setTimeout(apply, 200);
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
     const queries = [
       window.matchMedia("(prefers-reduced-motion: reduce)"),
       window.matchMedia("(max-width: 1100px)"),
     ];
     queries.forEach((q) => q.addEventListener("change", apply));
-    return () => queries.forEach((q) => q.removeEventListener("change", apply));
+    return () => {
+      window.removeEventListener("load", schedule);
+      if (idle !== undefined) {
+        if (window.cancelIdleCallback) window.cancelIdleCallback(idle);
+        else window.clearTimeout(idle);
+      }
+      queries.forEach((q) => q.removeEventListener("change", apply));
+    };
   }, []);
 
   const isLoop = tier === "loop";

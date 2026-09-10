@@ -1,77 +1,58 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
+  /* ── Brand (unchanged) ── */
   --green:      #012f21;
   --green-mid:  #0a4a33;
   --green-deep: #021a13;
+  --footer:     #07100c;
   --cream:      #f5f3ef;
   --cream-dark: #ede9e1;
   --cream-mid:  #e4dfd6;
-  --gold:       #b89a6a;
-  --gold-light: #d4b896;
+  --gold:       #b89a6a;   /* rules and dividers */
+  --gold-light: #d4b896;   /* labels on green */
+  --gold-cream: #9c7d4c;   /* labels on cream — #b89a6a fails contrast there */
   --text-dark:  #0d1f18;
-  --text-mid:   #3a4f44;
-  --text-muted: #7a8c82;
-  /* Two curves, not one. --ease is Material's standard in/out and stays on
-     state changes that go both ways — hovers, the nav background, a menu
-     opening and closing. --ease-entrance is an expo-out: it leaves fast and
-     lands slowly, which is what makes something arriving read as settling
-     rather than sliding. Entrances only; it looks wrong reversed. */
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --text-mid:   #3a4f44;   /* replaces #7a8c82, which fails contrast on cream */
+
+  /* ── Hairlines ── */
+  --rule-cream: rgba(1,47,33,0.14);
+  --rule-green: rgba(245,243,239,0.16);
 
   /* ── Type stacks ──
-     Latin first, Japanese second, so each script is served by a face drawn
-     for it: ASCII resolves to Cormorant / DM Sans and only Japanese falls
-     through to Shippori Mincho / Zen Kaku Gothic New.
+     Latin first, Japanese second, so ASCII resolves to Cormorant / DM Sans and
+     only Japanese falls through to Shippori Mincho / Zen Kaku Gothic New.
 
      The OS names and the terminating generic are NOT written here — they are
      the tail of the two JP variables (see app/[locale]/layout.tsx). A generic
-     family is terminal in font matching, so anything after it is dead; one
-     appearing mid-stack, before the Japanese face, is what made /ja render in
-     Hiragino regardless of what loaded. */
-  /* Which face goes where, and the whole of it:
-       --stack-display  wordmark, h1/h2, card titles, the big numerals, the
-                        contact email, event values. Things you look AT.
-       --stack-text     sublines, taglines, captions, body, labels, controls.
-                        Things you READ.
-     Nothing is italic. Cormorant's italic was carrying sublines, captions and
-     pull-quotes in eight different places, which is what made a two-face
-     pairing read as four. Emphasis is weight 500 or colour, never slant. */
+     family is terminal in font matching, so one appearing mid-stack, ahead of
+     the Japanese face, makes /ja render in Hiragino regardless of what loaded. */
   --stack-display: var(--font-serif), var(--font-jp-serif);
   --stack-text:    var(--font-sans), var(--font-jp-sans);
 
   /* ── Type scale ──
-     Eight steps, fluid between a 375px and a 1440px viewport. Every size on
-     the page resolves to one of these; no component sets a raw px or invents
-     its own clamp(). --t-mark is the ninth and last exception: the 縁 is an
-     ornament rather than type, and it is the only thing set larger than the
-     wordmark. */
-  --t-display: clamp(3.5rem, 1.5rem + 8.5vw, 7.5rem);
-  --t-mark:    clamp(6rem, 2rem + 17vw, 14rem);
-  --t-h1:      clamp(2.5rem, 1.4rem + 4.7vw, 5rem);
-  --t-h2:      clamp(2rem, 1.3rem + 3vw, 3.5rem);
-  --t-h3:      clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
-  /* --t-action exists because a label and a button are not the same job. An
-     eyebrow is read once at a glance and can sit small; a control has to be
-     hittable and legible under a cursor or a thumb, so it gets its own step
-     rather than borrowing the smallest one on the scale. */
-  --t-lead:    clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
-  --t-body:    1rem;      /* 16px */
-  --t-small:   0.9375rem; /* 15px — captions, footer, nav */
-  --t-action:  0.8125rem; /* 13px — anything you click */
-  --t-eyebrow: 0.75rem;   /* 12px — labels you only read */
+     Four roles, not the nine small-caps sizes and six body sizes this replaces.
+     Every size on the page resolves to one of these. */
+  --t-label:   0.7rem;    /* uppercase, .2em — every label, badge, caption */
+  --t-body:    1rem;      /* line-height 1.9 */
+  --t-lead:    1.35rem;   /* serif italic under headings, line-height 1.6 */
+  --t-small:   0.85rem;   /* footer links, collab note */
+  --t-tiny:    0.78rem;   /* copyright, form note */
+  --t-display: clamp(3rem, 6.5vw, 5.6rem);
 
-  --lh-display: 0.95;
-  --lh-heading: 1.15;
-  --lh-body:    1.7;
+  /* Hero only. The scroll intro's five beats descend from wordmark to
+     invitation on a scale of their own; the page's h2 sits between beats
+     three and four and cannot describe both ends. */
+  --t-hero:      clamp(3.2rem, 9vw, 9rem);
+  --t-hero-mark: clamp(6rem, 17vw, 16rem);
+  --t-hero-lg:   clamp(3rem, 7.5vw, 7rem);
+  --t-hero-md:   clamp(2.4rem, 5vw, 4.4rem);
+  --t-hero-sm:   clamp(2rem, 4vw, 3.4rem);
 
-  --tr-display: -0.005em;
-  --tr-heading: -0.002em;
-  --tr-eyebrow:  0.14em;
-  --tr-body:     0;
+  --tr-label: 0.2em;
 
-  /* The fixed nav's height, so anchor jumps and sticky offsets can agree. */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* The fixed nav's height, so anchor jumps and sticky offsets agree. */
   --header-h: 5.2rem;
 }
 @media (max-width: 960px) { :root { --header-h: 4.4rem; } }
@@ -82,12 +63,9 @@ body {
   background: var(--cream);
   color: var(--text-dark);
   overflow-x: hidden;
-  /* Two weights on the whole site: 400 reads, 500 emphasises. No 300, no
-     700. */
-  font-weight: 400;
+  font-weight: 300;
   font-size: var(--t-body);
-  line-height: var(--lh-body);
-  letter-spacing: var(--tr-body);
+  line-height: 1.9;
 }
 
 /* ─── NAV ─────────────────────────────────────── */
@@ -99,6 +77,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 2rem;
   transition: background 0.5s var(--ease), box-shadow 0.5s var(--ease);
 }
 nav.scrolled {
@@ -109,10 +88,9 @@ nav.scrolled {
 }
 .nav-logo {
   font-family: var(--stack-display);
-  font-size: var(--t-h3);
+  font-size: 1.35rem;
   font-weight: 500;
   color: var(--cream);
-  /* A wordmark, so it keeps its own open tracking rather than a heading's. */
   letter-spacing: 0.05em;
   text-decoration: none;
   transition: color 0.4s;
@@ -120,34 +98,25 @@ nav.scrolled {
 }
 nav.scrolled .nav-logo { color: var(--green); }
 
-.nav-center {
-  display: flex;
-  align-items: center;
-  gap: 2.8rem;
-  list-style: none;
-}
-/* One treatment for the nav, not three: sentence case at text size, the same
-   as the mobile overlay and the footer columns. */
+.nav-center { display: flex; align-items: center; gap: 2.4rem; list-style: none; }
 .nav-center a {
-  font-size: var(--t-small);
-  color: rgba(245,243,239,0.6);
+  position: relative;
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: rgba(245,243,239,0.72);
   text-decoration: none;
   transition: color 0.3s;
   white-space: nowrap;
 }
-nav.scrolled .nav-center a { color: var(--text-muted); }
+nav.scrolled .nav-center a { color: var(--text-mid); }
 .nav-center a:hover { color: var(--cream) !important; }
 nav.scrolled .nav-center a:hover { color: var(--green) !important; }
-.nav-center a {
-  position: relative;
-}
 .nav-center a::after {
   content: '';
   position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
   background: var(--gold);
   transition: width 0.35s var(--ease);
 }
@@ -155,150 +124,184 @@ nav.scrolled .nav-center a:hover { color: var(--green) !important; }
 nav.scrolled .nav-center a.nav-active { color: var(--green); }
 .nav-center a.nav-active::after { width: 100%; }
 
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1.8rem;
-  flex-shrink: 0;
-}
+.nav-right { display: flex; align-items: center; gap: 1.2rem; flex-shrink: 0; }
 
-/* Language toggle */
 .lang-toggle {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
 }
+/* Tap targets. Padding alone is not enough: these are inline elements, where
+   vertical padding paints but does not grow the hit box. */
 .lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   background: none;
   border: none;
   cursor: pointer;
   font-family: var(--stack-text);
-  color: rgba(245,243,239,0.4);
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: rgba(245,243,239,0.55);
   transition: color 0.25s;
-  padding: 0;
+  padding: 0 0.35rem;
   line-height: 1;
   text-decoration: none;
 }
-nav.scrolled .lang-btn { color: var(--text-muted); }
+nav.scrolled .lang-btn { color: var(--text-mid); }
 .lang-btn.active { color: var(--cream); }
 nav.scrolled .lang-btn.active { color: var(--green); }
-.lang-btn:hover { color: rgba(245,243,239,0.8); }
+.lang-btn:hover { color: rgba(245,243,239,0.85); }
 nav.scrolled .lang-btn:hover { color: var(--green); }
-.lang-sep {
-  color: rgba(245,243,239,0.2);
-  font-size: var(--t-eyebrow);
-  line-height: 1;
-}
-nav.scrolled .lang-sep { color: rgba(1,47,33,0.2); }
+.lang-sep { color: rgba(245,243,239,0.28); font-size: 0.6rem; line-height: 1; }
+nav.scrolled .lang-sep { color: rgba(1,47,33,0.25); }
 
-/* IG icon */
 .nav-ig {
-  color: rgba(245,243,239,0.6);
+  color: rgba(245,243,239,0.72);
   transition: color 0.3s;
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
 }
-nav.scrolled .nav-ig { color: var(--text-muted); }
+nav.scrolled .nav-ig { color: var(--text-mid); }
 .nav-ig:hover { color: var(--cream) !important; }
 nav.scrolled .nav-ig:hover { color: var(--green) !important; }
 
-/* ─── SHARED UTILITIES ──────────────────────────── */
-/* Anchor jumps would otherwise park section headings under the fixed nav. */
-/* Anchor jumps would otherwise park section headings under the fixed nav.
-   The heading carries its own margin as well as the section, because the
-   in-page links point at the section but the heading is what has to clear. */
+/* ─── SHARED ──────────────────────────────────── */
 section[id] { scroll-margin-top: var(--header-h); }
 h1, h2, h3 { scroll-margin-top: calc(var(--header-h) + 1.5rem); }
 
 .section-label {
-  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--gold-cream);
   margin-bottom: 1.4rem;
 }
+/* The rule draws itself in. It is a pseudo-element, so JS cannot animate it —
+   Reveal.tsx adds .is-in and this transition does the work. */
+.section-label::before {
+  content: '';
+  height: 1px;
+  width: 2.2rem;
+  flex-shrink: 0;
+  background: var(--gold);
+  transform-origin: left center;
+  transition: transform 0.9s var(--ease);
+}
+.section-label.is-in::before { transform: scaleX(1); }
 h2 {
   font-family: var(--stack-display);
-  font-size: var(--t-h1);
-  font-weight: 400;
-  line-height: var(--lh-heading);
-  letter-spacing: var(--tr-heading);
+  font-size: var(--t-display);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -0.015em;
   color: var(--green);
   text-wrap: balance;
+  word-break: auto-phrase;
 }
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.75s var(--ease-entrance), transform 0.75s var(--ease-entrance);
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-left {
-  opacity: 0;
-  transform: translateX(-24px);
-  transition: opacity 0.75s var(--ease-entrance), transform 0.75s var(--ease-entrance);
-}
-.reveal-left.visible { opacity: 1; transform: translateX(0); }
-.reveal-scale {
-  opacity: 0;
-  transform: scale(0.96);
-  transition: opacity 0.75s var(--ease-entrance), transform 0.75s var(--ease-entrance);
-}
-.reveal-scale.visible { opacity: 1; transform: scale(1); }
-.d1 { transition-delay: 0.07s; }
-.d2 { transition-delay: 0.15s; }
-.d3 { transition-delay: 0.23s; }
-.d4 { transition-delay: 0.31s; }
 
-.btn-cream {
-  display: inline-block;
-  color: var(--green);
-  background: var(--cream);
-  padding: 1rem 2.5rem;
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-  transition: color 0.35s;
+/* Two columns that stack on their own, instead of a fixed 1fr 1fr that
+   overflows before it breaks. */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 3rem 5rem;
 }
-.btn-cream::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--gold-light);
-  transform: translateX(-101%);
-  transition: transform 0.4s var(--ease);
-}
-.btn-cream:hover::before { transform: translateX(0); }
-.btn-cream span { position: relative; z-index: 1; }
 
-.btn-green {
-  display: inline-block;
-  color: var(--cream);
-  background: var(--green);
-  padding: 1rem 2.5rem;
+/* ── Buttons ── */
+.btn-cream, .btn-green, .btn-outline-cream, .btn-solid-green {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  white-space: nowrap;
+  padding: 1.05rem 2.4rem;
+  font-family: var(--stack-text);
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
   text-decoration: none;
-  position: relative;
-  overflow: hidden;
   border: none;
   cursor: pointer;
-  font-family: var(--stack-text);
+  transition: background 0.35s var(--ease), color 0.35s var(--ease),
+              border-color 0.35s var(--ease);
 }
-.btn-green::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--green-mid);
-  transform: translateX(-101%);
-  transition: transform 0.4s var(--ease);
-}
-.btn-green:hover::before { transform: translateX(0); }
-.btn-green span { position: relative; z-index: 1; }
-
+.btn-cream { color: var(--green); background: var(--cream); }
+.btn-cream:hover { background: var(--gold-light); }
+.btn-green { color: var(--cream); background: var(--green); }
+.btn-green:hover { background: var(--green-mid); }
+.btn-solid-green { color: var(--cream); background: var(--green); }
+.btn-solid-green:hover { background: var(--green-mid); }
 .btn-outline-cream {
-  display: inline-block;
   color: var(--cream);
-  border: 1px solid rgba(245,243,239,0.3);
-  padding: 1rem 2.5rem;
-  text-decoration: none;
-  transition: border-color 0.3s, background 0.3s;
+  border: 1px solid rgba(245,243,239,0.35);
+  background: transparent;
 }
-.btn-outline-cream:hover { border-color: rgba(245,243,239,0.65); background: rgba(245,243,239,0.06); }
+.btn-outline-cream:hover {
+  border-color: rgba(245,243,239,0.7);
+  background: rgba(245,243,239,0.06);
+}
+.btn-green:disabled { opacity: 0.7; cursor: not-allowed; }
+
+/* ── Reveal initial states ──
+   Reveal.tsx animates these to their final values and then pins them. Every
+   rule here is transform / opacity / clip-path only: nothing that repaints.
+
+   All of it hangs off `@media (scripting: enabled)`, so a visitor without
+   JavaScript never gets a hidden state at all and the page renders complete —
+   rather than being hidden by CSS and depending on a script to reveal it.
+
+   This used to be a class, then a data attribute, set by an inline script
+   before first paint. Both are hydration mismatches: React renders <html>'s
+   className, and it also compares the attributes actually on the node, so it
+   reports either one and refuses to patch it. A media query touches no DOM,
+   needs no script, and cannot desync from the server render. Browsers without
+   `scripting` (pre-2023) simply skip the block and show everything
+   immediately, which is the safe direction to fail.
+
+   `.is-in` is the pinned final state, and every one of these start rules is
+   one class less specific than its pinned counterpart, so pinning always
+   wins. */
+@media (scripting: enabled) {
+  [data-label] > span,
+  [data-stagger] > * { opacity: 0; }
+  .line-mask > span { display: block; transform: translateY(110%); }
+  [data-wipe] { clip-path: inset(0 0 0 100%); }
+  [data-wipe="left"]   { clip-path: inset(0 100% 0 0); }
+  [data-wipe="bottom"] { clip-path: inset(100% 0 0 0); }
+  [data-pop] { opacity: 0; transform: translateY(18px); }
+  .section-label::before { transform: scaleX(0); }
+  .ig-tile { clip-path: inset(100% 0 0 0); }
+  .ig-tile img { transform: scale(1.15); }
+}
+.line-mask { display: block; overflow: hidden; }
+
+.is-in { opacity: 1 !important; clip-path: inset(0) !important; }
+[data-pop].is-in, [data-stagger].is-in > *, [data-label].is-in > span { transform: none !important; }
+.is-in .line-mask > span { transform: none !important; }
+
+/* Parallax rides its own wrapper so it never fights the wipe's clip-path or
+   the image's scale for the transform property. */
+.par {
+  position: absolute;
+  inset: -40px 0;
+  transform: translateY(var(--py, 0px));
+  will-change: transform;
+}
+.par > img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ─── SCROLL VIDEO HERO ───────────────────────── */
 /* A tall scroll container whose sticky child holds the video. Scroll position
@@ -313,7 +316,7 @@ h2 {
   background: var(--green-deep);
   z-index: 1;
 }
-.svh[data-ready="1"] { height: 320svh; }
+.svh[data-ready="1"] { height: 360svh; }
 
 .svh-sticky {
   position: sticky;
@@ -429,6 +432,9 @@ h2 {
 }
 
 .svh-eyebrow {
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
   /* Plain --gold disappears against sunlit footage. */
   color: var(--gold-light);
   margin-bottom: 2.2rem;
@@ -436,14 +442,11 @@ h2 {
 }
 .svh-title {
   font-family: var(--stack-display);
-  font-size: var(--t-display);
-  /* 400, like every other display line. The 300 hairline that used to sit
-     here was the last weight on the site that existed nowhere else, and at
-     120px Cormorant 400 is the steadier drawing anyway. */
-  font-weight: 400;
+  font-size: var(--t-hero);
+  font-weight: 300;
   color: var(--cream);
-  line-height: var(--lh-display);
-  letter-spacing: var(--tr-display);
+  line-height: 0.96;
+  letter-spacing: -0.015em;
   margin-bottom: 2rem;
   text-wrap: balance;
   word-break: auto-phrase;
@@ -461,10 +464,11 @@ h2 {
   color: var(--gold-light);
 }
 .svh-sub {
-  font-family: var(--stack-text);
-  font-size: var(--t-lead);
-  font-weight: 400;
-  color: rgba(245,243,239,0.84);
+  font-family: var(--stack-display);
+  font-size: clamp(1.15rem, 2.6vw, 1.9rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(245,243,239,0.85);
   line-height: 1.55;
   max-width: 40rem;
   margin: 0 auto;
@@ -480,7 +484,10 @@ h2 {
   align-items: center;
   gap: 0.7rem;
   margin-top: 2.6rem;
-  color: rgba(245,243,239,0.72);
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: rgba(245,243,239,0.8);
   text-decoration: none;
   border-bottom: 1px solid rgba(245,243,239,0.22);
   padding-bottom: 0.3rem;
@@ -523,12 +530,12 @@ h2 {
   /* No ad-hoc stack: --stack-display already resolves 縁 to Shippori Mincho,
      because Cormorant has no Japanese and the JP face sits right behind it. */
   font-family: var(--stack-display);
-  font-size: var(--t-mark);
-  line-height: var(--lh-display);
+  font-size: var(--t-hero-mark);
+  line-height: 0.95;
   margin-bottom: 2.2rem;
   text-shadow: 0 2px 60px rgba(2,26,19,0.6);
 }
-.svh-panel[data-v="center-hero"] .svh-sub { font-size: var(--t-lead); }
+.svh-panel[data-v="center-hero"] .svh-sub { font-size: clamp(1.1rem, 2.2vw, 1.6rem); }
 
 /* Beats 3–5 sit left, against the subject. */
 .svh-panel[data-v^="left"] .svh-panel-inner {
@@ -553,10 +560,10 @@ h2 {
 .svh-panel[data-v^="left"] .svh-sub,
 .svh-panel[data-v^="left"] .svh-title { margin-left: 0; margin-right: 0; }
 
-.svh-panel[data-v="left-lg"] .svh-title { font-size: var(--t-h1); }
+.svh-panel[data-v="left-lg"] .svh-title { font-size: var(--t-hero-lg); }
 
 .svh-panel[data-v="left-md"] .svh-title {
-  font-size: var(--t-h2);
+  font-size: var(--t-hero-md);
   margin-bottom: 1.5rem;
 }
 /* Beat four carries the longest line of the five, which is why it used to be
@@ -566,8 +573,10 @@ h2 {
    the tighter measure (both of which the length actually needs) and rejoins
    the other four on the face. */
 .svh-panel[data-v="left-md"] .svh-sub {
-  font-size: var(--t-body);
-  line-height: 1.75;
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  font-style: normal;
+  font-family: var(--stack-text);
+  line-height: 1.8;
   max-width: 32rem;
 }
 
@@ -577,17 +586,17 @@ h2 {
   padding-bottom: 7rem;
 }
 .svh-panel[data-v="left-low"] .svh-title {
-  font-size: var(--t-h2);
+  font-size: var(--t-hero-sm);
   margin-bottom: 1.1rem;
 }
-.svh-panel[data-v="left-low"] .svh-sub { font-size: var(--t-body); }
+.svh-panel[data-v="left-low"] .svh-sub { font-size: clamp(0.95rem, 1.5vw, 1.15rem); }
 
 /* First panel gets the page's entrance cascade. */
 /* The page's first impression, so it keeps a longer, more deliberate cascade
    than the in-page reveals — but on the same entrance curve. */
-.svh-panel--first .svh-eyebrow { opacity: 0; animation: fadeUp 0.8s 0.35s var(--ease-entrance) forwards; }
-.svh-panel--first .svh-title   { opacity: 0; animation: fadeUp 1s 0.5s var(--ease-entrance) forwards; }
-.svh-panel--first .svh-sub     { opacity: 0; animation: fadeUp 0.9s 0.68s var(--ease-entrance) forwards; }
+.svh-panel--first .svh-eyebrow { opacity: 0; animation: fadeUp 0.8s 0.35s var(--ease) forwards; }
+.svh-panel--first .svh-title   { opacity: 0; animation: fadeUp 1s 0.5s var(--ease) forwards; }
+.svh-panel--first .svh-sub     { opacity: 0; animation: fadeUp 0.9s 0.68s var(--ease) forwards; }
 
 /* ── Chrome ── */
 .svh-cue {
@@ -598,7 +607,10 @@ h2 {
   display: flex;
   align-items: center;
   gap: 1rem;
-  color: rgba(245,243,239,0.42);
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: rgba(245,243,239,0.65);
 }
 .svh-cue-line {
   width: 3rem;
@@ -657,7 +669,7 @@ h2 {
 @media (max-width: 860px) {
   /* Scrub tier only: loop mode flows normally and must keep height: auto,
      or the last beat overflows the section into the content below. */
-  .svh:not(.svh--loop)[data-ready="1"] { height: 300svh; }
+  .svh:not(.svh--loop)[data-ready="1"] { height: 320svh; }
   .svh-rail { display: none; }
   .svh-stage { padding: 0 6vw; }
   .svh--loop .svh-stage { padding: 0; }
@@ -688,144 +700,522 @@ h2 {
   }
 }
 
+
+/* ─── SECTION RHYTHM ──────────────────────────── */
+.concept-section,
+.padel-section,
+.who-section,
+.event-section,
+.past-section,
+.contact-section { padding: clamp(6rem, 12vh, 10rem) 5vw; }
+.ig-section { padding: clamp(5rem, 9vh, 7.5rem) 5vw; }
+
+.concept-section { background: var(--green-deep); }
+.padel-section   { background: var(--cream); }
+.who-section     { background: var(--cream-dark); overflow-x: hidden; }
+.event-section   { background: var(--green); }
+.past-section    { background: var(--green-deep); }
+.ig-section      { background: var(--cream-dark); }
+.contact-section { background: var(--cream); }
+
+/* Every photo and video carries the intro's grade, so the page looks shot on
+   one body. */
+.framed { position: relative; overflow: hidden; border-radius: 2px; }
+.framed img, .framed video { filter: saturate(0.86) contrast(1.03); }
+/* <picture> has no rendering of its own; keeping it out of the box tree means
+   every selector written against `img` still describes what is laid out. */
+picture { display: contents; }
+
 /* ─── CONCEPT ─────────────────────────────────── */
-.concept-section {
-  background: var(--green);
-  padding: 5rem 5vw;
-  position: relative;
-  overflow: hidden;
-}
+.concept-section { position: relative; overflow: hidden; }
 .concept-en-bg {
   position: absolute;
-  top: 50%;
-  left: 25%;
-  transform: translate(-50%, -50%) scale(0.92);
-  font-size: clamp(22rem, 38vw, 50rem);
-  line-height: 1;
-  /* 4% cream read on --green but vanished once this section went to
-     --green-deep; the darker bed needs more lift to stay visible. */
-  color: rgba(245,243,239,0.07);
-  pointer-events: none;
-  user-select: none;
+  top: 50%; left: 25%;
+  transform: translate(-50%, calc(-50% + var(--py, 0px)));
+  will-change: transform;
   font-family: var(--stack-display);
   font-weight: 400;
+  font-size: clamp(20rem, 34vw, 44rem);
+  line-height: 1;
   letter-spacing: 0;
+  color: rgba(245,243,239,0.06);
+  pointer-events: none;
+  user-select: none;
   white-space: nowrap;
-  opacity: 0;
-  transition: opacity 1.4s ease, transform 1.4s ease;
   z-index: 0;
 }
-.concept-en-bg.visible {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.concept-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7rem;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-.concept-section .section-label { color: var(--gold); }
+.concept-grid { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; align-items: center; }
+.concept-section .section-label { color: var(--gold-light); }
 .concept-section h2 { color: var(--cream); margin-bottom: 1.4rem; }
 .concept-subline {
-  font-family: var(--stack-text);
+  font-family: var(--stack-display);
+  font-style: italic;
   font-size: var(--t-lead);
-  color: rgba(245,243,239,0.7);
+  line-height: 1.6;
+  color: rgba(245,243,239,0.85);
   margin-bottom: 1.8rem;
-  line-height: 1.65;
 }
-.concept-body {
-  color: rgba(245,243,239,0.5);
-  font-size: var(--t-body);
-  line-height: 1.95;
-}
+.concept-body { color: rgba(245,243,239,0.72); font-size: var(--t-body); line-height: 1.9; }
 .concept-highlight {
   display: block;
   margin-top: 1.2rem;
-  color: rgba(245,243,239,0.82);
-  font-family: var(--stack-text);
-  font-weight: 500;
-  font-size: var(--t-lead);
+  color: var(--cream);
+  font-family: var(--stack-display);
+  font-style: italic;
+  font-size: 1.05rem;
   line-height: 1.75;
 }
-.concept-visual {
-  position: relative;
-  height: 560px;
-  overflow: hidden;
-  border-radius: 4px;
+.concept-visual { aspect-ratio: 3 / 4; max-height: 70vh; width: 100%; }
+.concept-img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ─── WHAT IS PADEL ──────────────────────────── */
+.padel-wrap { max-width: 1200px; margin: 0 auto; }
+.padel-head { align-items: end; margin-bottom: 4.5rem; }
+.padel-lead {
+  max-width: 30rem;
+  font-family: var(--stack-display);
+  font-style: italic;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  line-height: 1.35;
+  color: var(--green);
 }
-.concept-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.c-frame {
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(245,243,239,0.07);
-  overflow: hidden;
-}
-.c-frame-inner {
-  position: absolute;
-  inset: 2rem;
-  border: 1px solid rgba(245,243,239,0.035);
+/* The three media labels become an index line under the lead, rather than
+   captions printed over the artwork. */
+.padel-index {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1.2rem;
-  background: rgba(10,74,51,0.28);
+  flex-wrap: wrap;
+  gap: 0.6rem 1.1rem;
+  margin-top: 1.6rem;
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--gold-cream);
 }
-.c-frame-inner p { color: rgba(245,243,239,0.18); }
-.c-frame-inner svg { opacity: 0.12; }
-.c-accent-line {
-  position: absolute;
-  bottom: 2.5rem;
-  right: -1.5rem;
-  width: 6rem;
+.padel-index::before {
+  content: '';
+  width: 2.2rem;
   height: 1px;
   background: var(--gold);
-  opacity: 0.3;
+  flex-shrink: 0;
+}
+.padel-index .sep { color: var(--gold); opacity: 0.7; }
+
+.padel-media {
+  perspective: 900px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 1.2rem;
+  margin-bottom: 5rem;
+}
+.pm-box {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: linear-gradient(140deg, #e8e4dc, #dbd6cd);
+  border-radius: 2px;
+  transform-style: preserve-3d;
+}
+.pm-sketch {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.pm-label {
+  position: absolute;
+  left: 0; right: 0; bottom: 1rem;
+  text-align: center;
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--text-mid);
 }
 
+/* Four hairline rows instead of four dark cards: the copy is the content, the
+   boxes were just chrome. */
+.features-row { border-top: 1px solid var(--rule-cream); }
+.fc {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem 2.5rem;
+  padding: 1.8rem 0;
+  border-bottom: 1px solid var(--rule-cream);
+  transition: padding-left 0.4s var(--ease);
+}
+.fc::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -1px;
+  width: 100%; height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s var(--ease);
+}
+.fc:hover { padding-left: 0.8rem; }
+.fc:hover::after { transform: scaleX(1); transition-duration: 0.5s; }
+.fc-num {
+  flex: 0 0 2.6rem;
+  font-family: var(--stack-display);
+  font-size: 1.1rem;
+  color: var(--gold-cream);
+  font-variant-numeric: tabular-nums;
+}
+.fc h3 {
+  flex: 1 1 200px;
+  font-family: var(--stack-display);
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--green);
+}
+.fc p { flex: 2 1 300px; font-size: var(--t-body); line-height: 1.9; color: var(--text-mid); }
+
 /* ─── WHO WE ARE ─────────────────────────────── */
-.who-section {
-  background: var(--cream);
-  padding: 9rem 5vw;
-}
-.who-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  /* The reel's mask feather already reads as a gap; a wide column gap on top
-     of it left the two halves looking unrelated. */
-  gap: 3rem;
-  align-items: center;
-}
-.who-text h2 { margin-bottom: 2rem; }
-.who-body-en {
-  font-size: var(--t-body);
-  color: var(--text-mid);
-  line-height: 2;
-  margin-bottom: 2rem;
-}
-.who-body-en p { margin-bottom: 1rem; }
-.who-body-en p:last-child { margin-bottom: 0; }
+.who-wrap { max-width: 1200px; margin: 0 auto; }
+.who-text h2 { margin-bottom: 0; }
+.who-body-en { font-size: var(--t-body); line-height: 1.9; color: var(--text-mid); }
+.who-body-en p + p { margin-top: 1rem; }
 .who-tagline {
   margin-top: 2.5rem;
   padding-top: 2rem;
-  border-top: 1px solid rgba(1,47,33,0.07);
-  font-family: var(--stack-text);
+  border-top: 1px solid var(--rule-cream);
+  font-family: var(--stack-display);
+  font-style: italic;
   font-size: var(--t-lead);
+  line-height: 1.6;
   color: var(--green);
-  opacity: 0.55;
 }
+/* The reel sits below the copy and runs full-bleed, so it reads as a strip
+   rather than a boxed-in column. */
+.who-reel { margin: 4rem -5vw 0; }
+
+/* ─── NEXT EVENT ─────────────────────────────── */
+.event-wrap { max-width: 1200px; margin: 0 auto; }
+.event-top { align-items: start; }
+.ev-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--gold-light);
+  border: 1px solid rgba(184,154,106,0.35);
+  padding: 0.5rem 0.95rem;
+  margin-bottom: 2rem;
+}
+.ev-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: pulse 2.2s infinite; }
+.event-wrap h2 { color: var(--cream); margin-bottom: 1.2rem; }
+.ev-name {
+  font-family: var(--stack-display);
+  font-style: italic;
+  font-size: var(--t-lead);
+  line-height: 1.6;
+  color: rgba(245,243,239,0.8);
+  margin-bottom: 1.4rem;
+}
+.ev-desc { font-size: var(--t-body); line-height: 1.9; color: rgba(245,243,239,0.78); max-width: 34rem; }
+
+.ev-meta { display: block; }
+.ev-meta-item {
+  display: grid;
+  grid-template-columns: minmax(6rem, 8rem) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--rule-green);
+}
+.ev-meta-item:first-child { border-top: 1px solid var(--rule-green); }
+.ev-meta-item label {
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: rgba(245,243,239,0.65);
+  line-height: 1.9;
+}
+.ev-meta-item p { font-family: var(--stack-display); font-size: 1.3rem; line-height: 1.5; color: var(--cream); }
+.ev-location-link {
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245,243,239,0.3);
+  transition: border-color 0.3s;
+}
+.ev-location-link:hover { border-bottom-color: var(--gold); }
+
+.ev-cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.4rem 2.2rem; margin-top: 2.2rem; }
+.ev-ig-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245,243,239,0.25);
+  padding-bottom: 0.3rem;
+  transition: color 0.25s, border-color 0.25s;
+}
+.ev-ig-cta:hover { color: var(--gold-light); border-color: var(--gold); }
+.ev-collab { margin-top: 1.8rem; font-size: var(--t-small); font-style: italic; line-height: 1.7; color: rgba(245,243,239,0.65); }
+
+.ev-visual { position: relative; margin-top: 4rem; }
+.ev-photo-frame { position: relative; width: 100%; aspect-ratio: 16 / 8; max-height: 70vh; border-radius: 2px; overflow: hidden; }
+.ev-photo { width: 100%; height: 100%; object-fit: cover; }
+.ev-photo-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(200deg, transparent 52%, rgba(2,26,19,0.35));
+}
+.ev-floater {
+  position: absolute;
+  right: 1.6rem; bottom: 1.6rem;
+  background: var(--cream);
+  padding: 1.6rem 1.9rem;
+  max-width: 260px;
+  z-index: 2;
+}
+.ev-floater-label {
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--green-mid);
+  margin-bottom: 0.5rem;
+}
+.ev-floater-text { font-family: var(--stack-display); font-style: italic; font-size: 1.2rem; line-height: 1.5; color: var(--green); }
+
+/* ─── PAST EVENTS ────────────────────────────── */
+.past-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 3rem 5rem;
+  align-items: center;
+}
+.past-copy { display: flex; flex-direction: column; gap: 2.4rem; align-items: flex-start; }
+.past-section .section-label { color: var(--gold-light); }
+.past-section h2 { color: var(--cream); }
+.past-caption { border-top: 1px solid var(--rule-green); padding-top: 1.6rem; width: 100%; }
+.past-caption-name {
+  display: block;
+  font-family: var(--stack-display);
+  font-style: italic;
+  font-size: var(--t-lead);
+  line-height: 1.6;
+  color: rgba(245,243,239,0.9);
+  margin-bottom: 0.35rem;
+}
+.past-caption-loc {
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: rgba(245,243,239,0.65);
+}
+.past-ratio {
+  width: min(100%, 420px);
+  aspect-ratio: 9 / 16;
+  margin: 0 auto;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px -30px rgba(0,0,0,0.6);
+}
+.past-video { width: 100%; height: 100%; object-fit: cover; display: block; border: none; background: #000; }
+
+/* ─── INSTAGRAM ──────────────────────────────── */
+.ig-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 2.5rem 5rem;
+  align-items: center;
+}
+.ig-headline { font-size: clamp(2.4rem, 4.5vw, 3.8rem); }
+.ig-cta { display: flex; flex-direction: column; align-items: flex-end; gap: 1rem; }
+.ig-handle { font-family: var(--stack-display); font-style: italic; font-size: 1.2rem; color: var(--text-mid); }
+.ig-grid {
+  max-width: 1200px;
+  margin: 3rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%/3 - 0.6rem, 300px), 1fr));
+  gap: 0.8rem;
+}
+.ig-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 2px;
+}
+/* The tile's closed clip and its zoomed-in image live in the
+   `@media (scripting: enabled)` block with every other start state. */
+.ig-tile img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(0.86) contrast(1.03);
+  transition: transform 0.9s var(--ease);
+}
+.ig-tile.is-in { clip-path: inset(0); }
+.ig-tile.is-in img { transform: scale(1); }
+.ig-tile:hover img { transform: scale(1.06); }
+.ig-tile-veil {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cream);
+  background: rgba(2,26,19,0.4);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease);
+}
+.ig-tile:hover .ig-tile-veil { opacity: 1; }
+
+/* ─── CONTACT ────────────────────────────────── */
+.contact-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 3rem 5rem;
+  align-items: start;
+}
+.contact-left h2 { margin-bottom: 2rem; }
+.contact-intro { font-size: var(--t-body); line-height: 1.9; color: var(--text-mid); margin-bottom: 3rem; max-width: 34rem; }
+.contact-email-row { display: flex; flex-direction: column; gap: 0.4rem; }
+.contact-email-label {
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+.contact-email {
+  font-family: var(--stack-display);
+  font-size: 1.35rem;
+  color: var(--green);
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  transition: color 0.25s;
+}
+.contact-email::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 1px;
+  background: var(--gold);
+  transition: width 0.35s var(--ease);
+}
+.contact-email:hover { color: var(--green-mid); }
+.contact-email:hover::after { width: 100%; }
+
+.contact-form { display: flex; flex-direction: column; gap: 1.4rem; }
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 1.2rem; }
+.form-field { display: flex; flex-direction: column; gap: 0.5rem; }
+.form-field label {
+  font-size: var(--t-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+/* 16px, so iOS does not zoom the viewport on focus. */
+.form-field input,
+.form-field textarea,
+.form-field select {
+  font-family: var(--stack-text);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--text-dark);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(1,47,33,0.2);
+  padding: 0.75rem 0;
+  outline: none;
+  transition: border-color 0.3s;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  width: 100%;
+}
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus { border-bottom-color: var(--green); }
+.form-field input::placeholder,
+.form-field textarea::placeholder { color: rgba(1,47,33,0.35); }
+.form-field textarea { resize: none; height: 120px; line-height: 1.7; }
+.form-field select { cursor: pointer; background-image: none; }
+.form-submit { margin-top: 0.5rem; display: flex; align-items: center; gap: 1.4rem 2rem; flex-wrap: wrap; }
+.form-note { font-size: var(--t-tiny); font-style: italic; color: var(--text-mid); }
+.form-error { font-size: var(--t-tiny); color: #b03a34; margin-top: 0.2rem; }
+.form-field.has-error input,
+.form-field.has-error textarea { border-bottom-color: #b03a34; }
+.form-spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 1.5px solid rgba(245,243,239,0.3);
+  border-top-color: var(--cream);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+}
+
+/* ─── FOOTER ─────────────────────────────────── */
+footer { background: var(--footer); padding: 5rem 5vw 3rem; }
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 3rem;
+  margin-bottom: 4rem;
+  max-width: 1100px;
+}
+.f-logo { font-family: var(--stack-display); font-size: 1.9rem; color: var(--cream); margin-bottom: 0.9rem; letter-spacing: 0.03em; }
+.f-tag { font-size: var(--t-small); color: rgba(245,243,239,0.65); line-height: 1.9; max-width: 250px; }
+.f-col h4 {
+  font-size: var(--t-label);
+  font-weight: 400;
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 1.3rem;
+}
+.f-col a {
+  display: block;
+  font-size: var(--t-small);
+  color: rgba(245,243,239,0.7);
+  text-decoration: none;
+  margin-bottom: 0.65rem;
+  transition: color 0.25s;
+}
+.f-col a:hover { color: var(--cream); }
+.footer-bottom {
+  border-top: 1px solid rgba(245,243,239,0.1);
+  padding-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-bottom p { font-size: var(--t-tiny); color: rgba(245,243,239,0.6); }
+.f-ig-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(245,243,239,0.6);
+  text-decoration: none;
+  font-size: var(--t-tiny);
+  transition: color 0.25s;
+}
+.f-ig-link:hover { color: var(--cream); }
+
+/* ─── THE PHOTO REEL ─────────────────────────── */
 /* ── The photo reel ────────────────────────────────────────────────
    A film strip that drifts sideways on its own, framed in the column beside
    the copy. The window is narrow, so the mask feathers are proportionally
@@ -888,615 +1278,187 @@ h2 {
   .marquee { overflow-x: auto; }
 }
 
-/* ─── WHAT IS PADEL ──────────────────────────── */
-.padel-section {
-  background: var(--cream-dark);
-  padding: 9rem 5vw;
-}
-.padel-wrap { max-width: 1200px; margin: 0 auto; }
-.padel-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 3rem;
-  margin-bottom: 5rem;
-  flex-wrap: wrap;
-}
-.padel-desc {
-  max-width: 380px;
-  color: var(--text-muted);
-  font-size: var(--t-lead);
-  line-height: 1.7;
-}
-.padel-media {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  grid-template-rows: 260px 260px;
-  gap: 1.2rem;
-  margin-bottom: 5rem;
-}
-.pm-box {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(140deg, #e8e4dc, #dbd6cd);
-}
-.pm-box.tall { grid-row: span 2; }
-.pm-inner {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(140deg, #e8e4dc, #dbd6cd);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.7rem;
-}
-.pm-inner svg { opacity: 0.18; }
-.pm-sketch {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.features-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
-}
-.fc {
-  background: var(--green);
-  padding: 2.5rem 1.8rem;
-  position: relative;
-  overflow: hidden;
-  transition: background 0.3s;
-}
-.fc:hover { background: var(--green-mid); }
-.fc-num {
-  font-family: var(--stack-display);
-  font-size: var(--t-h2);
-  font-weight: 400;
-  color: rgba(245,243,239,0.055);
-  line-height: 1;
-  position: absolute;
-  top: 1rem;
-  right: 1.4rem;
-}
-.fc h3 {
-  font-family: var(--stack-display);
-  font-size: var(--t-h3);
-  color: var(--cream);
-  margin-bottom: 0.7rem;
-  font-weight: 400;
-}
-.fc p { font-size: var(--t-small); color: rgba(245,243,239,0.38); line-height: 1.85; }
-.fc::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0;
-  width: 0; height: 1px;
-  background: var(--gold);
-  transition: width 0.45s var(--ease);
-}
-.fc:hover::after { width: 100%; }
-
-/* ─── FIRST EVENT ────────────────────────────── */
-.event-section {
-  background: var(--cream);
-  padding: 5rem 5vw;
-}
-.event-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7rem;
-  align-items: center;
-}
-.ev-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--gold);
-  border: 1px solid rgba(184,154,106,0.28);
-  padding: 0.38rem 0.9rem;
-  margin-bottom: 2rem;
-}
-.ev-dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--gold);
-  animation: pulse 2.2s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.event-wrap h2 { margin-bottom: 0.35rem; }
-.ev-name {
-  font-family: var(--stack-text);
-  color: var(--text-muted);
-  font-size: var(--t-body);
-  margin-bottom: 2.8rem;
-}
-.ev-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.4rem;
-  padding: 1.8rem;
-  border: 1px solid rgba(1,47,33,0.07);
-  background: var(--cream-dark);
-  margin-bottom: 2.2rem;
-}
-.ev-meta-item label {
-  display: block;
-  color: var(--text-muted);
-  margin-bottom: 0.3rem;
-}
-.ev-meta-item p {
-  font-family: var(--stack-display);
-  font-size: var(--t-h3);
-  color: var(--green);
-  font-weight: 500;
-}
-.ev-location-link {
-  color: var(--green);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(1,47,33,0.2);
-  transition: border-color 0.3s ease;
-}
-.ev-location-link:hover {
-  border-bottom-color: var(--green);
-}
-.ev-desc {
-  font-size: var(--t-body);
-  color: var(--text-mid);
-  line-height: 1.95;
-  margin-bottom: 2.2rem;
-}
-.ev-ig-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  color: var(--green);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(1,47,33,0.18);
-  padding-bottom: 0.2rem;
-  transition: border-color 0.25s, color 0.25s;
-}
-.ev-ig-cta:hover { color: var(--green-mid); border-color: var(--gold); }
-.ev-collab {
-  margin-top: 1.8rem;
-  font-size: var(--t-small);
-  color: var(--text-muted);
-  line-height: 1.7;
-}
-.ev-visual {
-  position: relative;
-  border-radius: 4px;
-}
-.ev-photo {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 4px;
-}
-.ev-visual-main {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(140deg, #e8e4dc, #dbd6cd);
-  border: 1px solid rgba(1,47,33,0.07);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-.ev-visual-main svg { opacity: 0.16; }
-.ev-visual-main p { color: var(--text-muted); }
-/* The accent card hanging off the photo's corner. 260px at 24px was too tight
-   for either locale: English broke 2 lines unevenly and Japanese ran to three
-   with a two-character orphan (「ティ」) on the last. 280px at --t-lead with
-   balanced wrapping gives both scripts two even lines. */
-.ev-floater {
-  position: absolute;
-  bottom: -3rem;
-  right: -2rem;
-  background: var(--green);
-  padding: 2rem 2.2rem;
-  width: 280px;
-  z-index: 2;
-}
-.ev-floater-label {
-  color: var(--gold);
-  margin-bottom: 0.45rem;
-}
-.ev-floater-text {
-  font-family: var(--stack-display);
-  font-size: var(--t-lead);
-  color: var(--cream);
-  line-height: 1.5;
-  text-wrap: balance;
-}
-
-/* ─── PAST EVENTS ────────────────────────────── */
-.past-section {
-  background: var(--green);
-  padding: 9rem 5vw 10rem;
-  text-align: center;
-}
-.past-wrap { max-width: 1100px; margin: 0 auto; }
-.past-section .section-label { color: var(--gold); }
-.past-section h2 { color: var(--cream); margin-bottom: 4.5rem; }
-
-.past-ratio {
-  position: relative;
-  width: min(360px, 76vw);
-  aspect-ratio: 9 / 16;
-  margin: 0 auto 2.5rem;
-}
-.past-video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border: none;
-  border-radius: 4px;
-}
-.past-caption {
-  text-align: center;
-  margin-top: 0.5rem;
-}
-.past-caption-name {
-  font-family: var(--stack-text);
-  font-size: var(--t-body);
-  color: rgba(245,243,239,0.38);
-  display: block;
-  margin-bottom: 0.25rem;
-}
-.past-caption-loc {
-  color: rgba(245,243,239,0.35);
-}
-.past-cta { margin-top: 4rem; }
-
-/* Video modal */
-.v-modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 500;
-  background: rgba(1,14,9,0.94);
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-}
-.v-modal.open { display: flex; }
-.v-modal-inner { width: 100%; max-width: 860px; position: relative; }
-.v-modal-ratio {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%;
-  background: var(--green-deep);
-  border-radius: 5px;
-  overflow: hidden;
-}
-.v-modal-ratio iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-.v-modal-close {
-  position: absolute;
-  top: -3rem;
-  right: 0;
-  background: none;
-  border: none;
-  color: rgba(245,243,239,0.42);
-  cursor: pointer;
-  transition: color 0.25s;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--stack-text);
-}
-.v-modal-close:hover { color: var(--cream); }
-
-/* ─── INSTAGRAM ──────────────────────────────── */
-/* A wide editorial band, not a centred island: headline on the left, the
-   action on the right, sharing one baseline-ish axis. The old centred stack
-   left a 500px column adrift in the full-width cream. */
-.ig-section {
-  background: var(--cream-dark);
-  padding: 7rem 5vw;
-}
-.ig-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 3rem 6rem;
-}
-.ig-section .section-label { color: var(--gold); }
-/* Nothing to declare: this is an <h2> and takes the h2 rule. Kept as a hook
-   for the reveal delay in the markup. */
-.ig-cta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1.4rem;
-}
-/* The feed preview: square tiles in the Instagram grid idiom, carrying the
-   site grade. On hover the tile drops its veil and shows the glyph — the
-   whole strip is one big "this is our feed" affordance. */
-.ig-grid {
-  max-width: 1200px;
-  margin: 3.5rem auto 0;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.8rem;
-}
-.ig-tile {
-  position: relative;
-  display: block;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 2px;
-}
-.ig-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: saturate(0.86) contrast(1.03);
-  transition: transform 0.9s var(--ease), filter 0.6s var(--ease);
-}
-.ig-tile-veil {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--cream);
-  background: rgba(2,26,19,0.4);
-  opacity: 0;
-  transition: opacity 0.45s var(--ease);
-}
-.ig-tile:hover img { transform: scale(1.06); filter: saturate(1) contrast(1.03); }
-.ig-tile:hover .ig-tile-veil { opacity: 1; }
-.ig-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8rem;
-  color: var(--green);
-  border: 1px solid rgba(1,47,33,0.18);
-  padding: 0.95rem 2rem;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-.ig-link:hover { background: rgba(1,47,33,0.05); border-color: rgba(1,47,33,0.35); }
-.ig-handle {
-  font-family: var(--stack-text);
-  font-size: var(--t-lead);
-  color: var(--text-muted);
-}
-
-/* ─── CONTACT ────────────────────────────────── */
-.contact-section {
-  background: var(--cream);
-  padding: 9rem 5vw;
-}
-.contact-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 7rem;
-  align-items: start;
-}
-.contact-left h2 { margin-bottom: 2rem; }
-.contact-intro {
-  font-size: var(--t-lead);
-  color: var(--text-muted);
-  line-height: 1.7;
-  margin-bottom: 3rem;
-}
-.contact-email-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.contact-email-label { color: var(--text-muted); }
-.contact-email {
-  font-family: var(--stack-display);
-  font-size: var(--t-h3);
-  color: var(--green);
-  text-decoration: none;
-  position: relative;
-  display: inline-block;
-  transition: color 0.25s;
-}
-.contact-email::after {
-  content: '';
-  position: absolute;
-  bottom: -2px; left: 0;
-  width: 0; height: 1px;
-  background: var(--gold);
-  transition: width 0.35s var(--ease);
-}
-.contact-email:hover { color: var(--green-mid); }
-.contact-email:hover::after { width: 100%; }
-
-/* Form */
-.contact-form { display: flex; flex-direction: column; gap: 1.4rem; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-.form-field { display: flex; flex-direction: column; gap: 0.5rem; }
-.form-field label { color: var(--text-muted); }
-.form-field input,
-.form-field textarea,
-.form-field select {
-  font-family: var(--stack-text);
-  font-size: var(--t-body);
-  font-weight: 400;
-  color: var(--text-dark);
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(1,47,33,0.15);
-  padding: 0.65rem 0;
-  outline: none;
-  transition: border-color 0.3s;
-  -webkit-appearance: none;
-  appearance: none;
-  border-radius: 0;
-  width: 100%;
-}
-.form-field input:focus,
-.form-field textarea:focus,
-.form-field select:focus {
-  border-bottom-color: var(--green);
-}
-.form-field input::placeholder,
-.form-field textarea::placeholder { color: rgba(1,47,33,0.25); }
-.form-field textarea { resize: none; height: 120px; line-height: 1.7; }
-.form-field select { cursor: pointer; background-image: none; }
-.form-field select option { background: var(--cream); }
-.form-submit {
-  margin-top: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-.form-note {
-  font-size: var(--t-small);
-  color: var(--text-muted);
-}
-.form-error {
-  font-size: var(--t-small);
-  color: #b85450;
-  margin-top: 0.2rem;
-}
-.form-field.has-error input,
-.form-field.has-error textarea {
-  border-bottom-color: #b85450;
-}
-.btn-green:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-.form-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid rgba(245,243,239,0.3);
-  border-top-color: var(--cream);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  vertical-align: middle;
-  margin-right: 0.4rem;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ─── FOOTER ─────────────────────────────────── */
-footer {
-  background: #07100c;
-  padding: 5rem 5vw 3rem;
-}
-.footer-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 4rem;
-  margin-bottom: 5rem;
-  max-width: 1100px;
-}
-.f-logo {
-  font-family: var(--stack-display);
-  font-size: var(--t-h3);
-  color: var(--cream);
-  margin-bottom: 0.9rem;
-  letter-spacing: 0.03em;
-}
-.f-tag {
-  font-size: var(--t-small);
-  color: rgba(245,243,239,0.36);
-  line-height: 1.9;
-  max-width: 250px;
-}
-.f-col h4 {
-  color: rgba(245,243,239,0.32);
-  margin-bottom: 1.3rem;
-}
-.f-col a {
-  display: block;
-  font-size: var(--t-small);
-  color: rgba(245,243,239,0.38);
-  text-decoration: none;
-  margin-bottom: 0.65rem;
-  transition: color 0.25s;
-}
-.f-col a:hover { color: var(--cream); }
-.footer-bottom {
-  border-top: 1px solid rgba(245,243,239,0.05);
-  padding-top: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.footer-bottom p { font-size: var(--t-small); color: rgba(245,243,239,0.32); }
-.f-ig-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: rgba(245,243,239,0.32);
-  text-decoration: none;
-  font-size: var(--t-small);
-  transition: color 0.25s;
-}
-.f-ig-link:hover { color: var(--cream); }
 
 /* ─── KEYFRAMES ──────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse  { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+@keyframes spin   { to { transform: rotate(360deg); } }
+
+/* ─── JAPANESE ────────────────────────────────── */
+/* The Latin faces cover no Japanese, so the second family in each stack does
+   all the work on /ja. What is left is what Latin typography does that
+   Japanese typography does not.
+
+   These are token redefinitions on the root, not per-component rules. That
+   matters: `:lang(ja)` matches EVERY element (lang inherits) at a specificity
+   that beats a bare `h2`, so a blanket `:lang(ja) { line-height }` silently
+   reassigns body leading to the display headings. */
+html:lang(ja) {
+  --t-label: 0.8rem;    /* not uppercased, so it needs the size to separate */
+  --tr-label: 0.08em;
+  font-feature-settings: "palt" 1;
+  line-break: strict;
+  text-spacing-trim: trim-start;
+  letter-spacing: 0.01em;
 }
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+:lang(ja) h1, :lang(ja) h2, :lang(ja) h3 { letter-spacing: 0.01em; line-height: 1.35; }
+:lang(ja) .concept-body,
+:lang(ja) .who-body-en,
+:lang(ja) .ev-desc,
+:lang(ja) .contact-intro,
+:lang(ja) .fc p { line-height: 1.95; }
+
+/* Japanese has no italic. The redesign sets its leads in serif italic, which
+   is right for the Latin and impossible for the Japanese: no JP face carries
+   an italic, so the browser synthesises one by skewing the glyphs. The design
+   handoff does not mention this because it was written against a build that
+   had the same fault. The italics stay in the Latin design and are cancelled
+   here — /en keeps them, /ja never gets a fake one. */
+:lang(ja) em,
+:lang(ja) i,
+:lang(ja) .svh-sub,
+:lang(ja) .concept-subline,
+:lang(ja) .concept-highlight,
+:lang(ja) .padel-lead,
+:lang(ja) .who-tagline,
+:lang(ja) .ev-name,
+:lang(ja) .ev-collab,
+:lang(ja) .ev-floater-text,
+:lang(ja) .past-caption-name,
+:lang(ja) .ig-handle,
+:lang(ja) .form-note {
+  font-style: normal;
 }
 
-/* ─── RESPONSIVE ─────────────────────────────── */
-@media (max-width: 960px) {
-  .concept-grid,
-  .who-wrap,
-  .event-wrap,
-  .contact-wrap { grid-template-columns: 1fr; gap: 4rem; }
-  .concept-visual { height: 380px; }
-  /* Single column: run the reel edge to edge under the copy instead of
-     boxing it into the column width. */
-  .marquee { margin: 0 -5vw; }
-  /* The IG band stacks and everything returns to the left edge. */
-  .ig-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-  .ig-cta { align-items: flex-start; }
-  /* Two rows of three reads as a feed; six across would be postage stamps. */
-  .ig-grid { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
-  .concept-en-bg { left: 50%; top: 30%; }
-  .ev-floater { display: none; }
-  .features-row { grid-template-columns: 1fr 1fr; }
-  .padel-media { grid-template-columns: 1fr; grid-template-rows: auto; }
-  .pm-box.tall { grid-row: auto; }
-  .pm-box, .pm-box.tall { height: 240px; }
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
-  .nav-center { display: none; }
-  nav { padding: 1rem 4vw; }
+/* The Japanese `padel.desc` is two full sentences where the English is a
+   seven-word line, so the lead size that suits one buries the other. Japanese
+   gets its own step down and a normal reading measure. */
+:lang(ja) .padel-lead {
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.95;
+  max-width: 34rem;
 }
+
+/* Uppercase is a Latin device: text-transform does nothing to kana and kanji
+   except leave them looking undersized next to their tracking. */
+:lang(ja) .section-label,
+:lang(ja) .padel-index,
+:lang(ja) .pm-label,
+:lang(ja) .ev-badge,
+:lang(ja) .ev-meta-item label,
+:lang(ja) .ev-floater-label,
+:lang(ja) .ev-ig-cta,
+:lang(ja) .past-caption-loc,
+:lang(ja) .contact-email-label,
+:lang(ja) .form-field label,
+:lang(ja) .f-col h4,
+:lang(ja) .nav-center a,
+:lang(ja) .btn-cream,
+:lang(ja) .btn-green,
+:lang(ja) .btn-solid-green,
+:lang(ja) .btn-outline-cream { text-transform: none; }
+
+/* The language toggle is the exception: JP / EN are Latin either way. */
+:lang(ja) .lang-toggle,
+:lang(ja) .lang-btn { text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.7rem; }
+
+/* The burger takes over below 960; leaving the inline links in place just
+   overflows the bar. (MobileMenu's own breakpoint is the same 960.) */
+@media (max-width: 960px) {
+  .nav-center { display: none; }
+  nav { padding: 1rem 5vw; }
+}
+
+/* ─── MOBILE (≤ 860px) ───────────────────────── */
+@media (max-width: 860px) {
+  .concept-section,
+  .padel-section,
+  .who-section,
+  .event-section,
+  .past-section,
+  .contact-section { padding: clamp(4.5rem, 10vh, 6rem) 6vw; }
+  .ig-section { padding: clamp(4.5rem, 9vh, 6rem) 6vw; }
+  footer { padding: 4rem 6vw 2.5rem; }
+
+  h2 { font-size: clamp(2.6rem, 11vw, 4rem); }
+  .ig-headline { font-size: clamp(2.2rem, 9vw, 3rem); }
+  .concept-body, .who-body-en, .ev-desc, .contact-intro, .fc p { max-width: 34rem; }
+
+  /* Stacking order: copy first, photo after — except Concept and Past, where
+     the image leads. */
+  .concept-grid .concept-visual { order: -1; }
+  .past-wrap .past-ratio { order: -1; }
+  .concept-en-bg { left: 50%; top: 32%; }
+  .concept-visual { aspect-ratio: 4 / 5; max-height: 60vh; }
+
+  .padel-head { margin-bottom: 3rem; }
+  .padel-media { grid-template-columns: 1fr; }
+  .fc { padding: 1.4rem 0; gap: 0.4rem 1.5rem; }
+  .fc:hover { padding-left: 0; }
+  .fc-num { flex: 0 0 100%; }
+  .fc h3 { flex: 0 0 100%; font-size: 1.5rem; }
+  .fc p { flex: 0 0 100%; }
+
+  /* Full-bleed reel: it is a strip, and a strip should touch both edges. */
+  .who-reel { margin: 3rem -6vw 0; }
+  .marquee-print img { height: clamp(180px, 26vh, 240px); }
+
+  /* The definition list still fits two columns at 390px. */
+  .ev-meta-item { grid-template-columns: minmax(6rem, 8rem) minmax(0, 1fr); }
+  .ev-cta-row > .btn-cream { flex: 1 1 100%; }
+  .ev-visual { margin-top: 2.5rem; }
+  .ev-photo-frame { aspect-ratio: 4 / 3; }
+  /* The card becomes a caption under the photo instead of covering it. */
+  .ev-floater {
+    position: static;
+    max-width: none;
+    margin-top: 1rem;
+    padding: 1.3rem 1.5rem;
+  }
+
+  .past-ratio { width: min(100%, 360px); }
+  .past-copy { gap: 1.8rem; }
+
+  .ig-grid { margin-top: 2.2rem; gap: 0.6rem; }
+  .ig-cta { align-items: flex-start; }
+
+  .footer-grid { gap: 2rem; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+}
+
+/* Never one column of Instagram tiles — two is the floor. */
 @media (max-width: 600px) {
-  .features-row { grid-template-columns: 1fr; }
-  .padel-head { flex-direction: column; align-items: flex-start; }
-  .form-row { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .footer-bottom { flex-direction: column; gap: 1rem; }
-  .past-section { padding: 6rem 3vw 7rem; }
+  .ig-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ─── REDUCED MOTION ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+  /* Show every final state; nothing may be left hidden. */
+  [data-label] > span,
+  [data-stagger] > *,
+  [data-pop] { opacity: 1 !important; transform: none !important; }
+  [data-wipe], .ig-tile { clip-path: inset(0) !important; }
+  [data-line] > span { transform: none !important; }
+  .ig-tile img { transform: none !important; }
+  .section-label::before { transform: scaleX(1) !important; }
+  .marquee-track { animation: none; }
+  .marquee { overflow-x: auto; }
+  .svh-panel--first .svh-eyebrow,
+  .svh-panel--first .svh-title,
+  .svh-panel--first .svh-sub { opacity: 1; transform: none; animation: none; }
+}
+
+/* Tilt and magnetic pull need a cursor; on touch they only cause jitter. */
+@media (hover: none) {
+  .fc:hover { padding-left: 0; }
+  .ig-tile:hover img { transform: scale(1); }
 }
 
 /* ─── CUSTOM SELECT ──────────────────────────── */
@@ -1573,6 +1535,7 @@ footer {
   gap: 5px;
   width: 24px;
   height: 20px;
+  box-sizing: content-box;
   background: none;
   border: none;
   cursor: pointer;
@@ -1653,8 +1616,8 @@ nav.menu-open {
 .mobile-overlay.open .mn-item.d4 { transition-delay: 0.34s; }
 .mn-item a {
   font-family: var(--stack-display);
-  font-size: var(--t-h2);
-  font-weight: 400;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 300;
   color: var(--cream);
   text-decoration: none;
   line-height: 1.4;
@@ -1675,22 +1638,32 @@ nav.menu-open {
   transform: translateY(0);
 }
 .mn-footer .lang-toggle { gap: 0.6rem; }
-.mn-footer .lang-btn { color: rgba(245,243,239,0.4); }
+.mn-footer .lang-btn { color: rgba(245,243,239,0.6); font-size: 0.8rem; padding: 0.6rem 0.35rem; }
 .mn-footer .lang-btn.active { color: var(--cream); }
 .mn-footer .lang-sep { color: rgba(245,243,239,0.2); }
 .mn-ig {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: rgba(245,243,239,0.5);
+  color: rgba(245,243,239,0.7);
   text-decoration: none;
   font-size: var(--t-small);
+  padding: 0.6rem 0;
   transition: color 0.25s;
 }
 .mn-ig:hover { color: var(--cream); }
 
 @media (max-width: 960px) {
-  .mobile-burger { display: flex; }
+  .mobile-burger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.6rem;
+  }
+  /* The bars keep their own size inside the larger hit box. */
+  .mobile-burger .burger-line { width: 24px; }
 }
 @media (min-width: 961px) {
   .mobile-overlay { display: none !important; }
@@ -1728,287 +1701,3 @@ nav:not(.scrolled) *:focus-visible {
 }
 
 
-/* ─── CINEMATIC RESTYLE ───────────────────────── */
-/* Everything below the intro should read as more frames from the same film
-   rather than a stack of cards. Loaded last so it overrides the section
-   blocks above without editing each of them in place. */
-
-/* 1. Surface rhythm — dark pairs alternating with light pairs, starting from
-      the intro. The Padel section stays light on purpose: its sketches are
-      dark line art on an opaque white background. */
-.concept-section { background: var(--green-deep); }
-.padel-section   { background: var(--cream); }
-.who-section     { background: var(--cream-dark); }
-.event-section   { background: var(--green); }
-.past-section    { background: var(--green-deep); }
-
-/* 2. One vertical rhythm instead of five different paddings. */
-.concept-section,
-.padel-section,
-.who-section,
-.event-section,
-.past-section,
-.ig-section,
-.contact-section {
-  padding: clamp(7rem, 13vh, 11rem) 5vw;
-}
-/* The IG section sits slightly shallower than the full acts — the feed grid
-   gives it body, but it is still a hand-off to Instagram, not a destination. */
-.ig-section { padding: clamp(6rem, 10vh, 8.5rem) 5vw; }
-
-/* 3. Inverted Event section: the second dark beat, echoing the DJ panel that
-      closes the intro, and the page's conversion moment. */
-.event-wrap h2       { color: var(--cream); }
-.ev-name             { color: rgba(245,243,239,0.5); }
-.ev-meta {
-  background: rgba(245,243,239,0.045);
-  border-color: rgba(245,243,239,0.1);
-}
-.ev-meta-item label  { color: rgba(245,243,239,0.42); }
-.ev-meta-item p,
-.ev-location-link    { color: var(--cream); }
-.ev-location-link    { border-bottom-color: rgba(245,243,239,0.25); }
-.ev-location-link:hover { border-bottom-color: var(--gold); }
-.ev-desc             { color: rgba(245,243,239,0.58); }
-.ev-ig-cta           { color: var(--cream); border-bottom-color: rgba(245,243,239,0.22); }
-.ev-ig-cta:hover     { color: var(--gold-light); border-color: var(--gold); }
-.ev-collab           { color: rgba(245,243,239,0.42); }
-.ev-floater          { background: var(--cream); }
-.ev-floater-label    { color: var(--green-mid); }
-.ev-floater-text     { color: var(--green); }
-
-/* 4. One camera: every photo and video on the page carries the same grade as
-      the intro footage, so the whole thing looks shot on one body. */
-.framed {
-  position: relative;
-  overflow: hidden;
-  border-radius: 2px;
-}
-.framed img,
-.framed video {
-  filter: saturate(0.86) contrast(1.03);
-  transition: transform 1.2s var(--ease), filter 0.8s var(--ease);
-}
-.framed::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(200deg, rgba(2,26,19,0) 52%, rgba(2,26,19,0.3) 100%);
-}
-.framed:hover img { transform: scale(1.03); filter: saturate(1) contrast(1.03); }
-
-/* <Picture> wraps every photo in <picture> to offer AVIF and WebP. That
-   element has no rendering of its own, and `display: contents` keeps it out of
-   the box tree entirely — so .pm-sketch stays the flex item, .concept-img
-   stays the direct child, and every selector written against `img` still
-   describes the thing that is actually laid out. */
-picture { display: contents; }
-
-/* Print, not web app. */
-.concept-visual,
-.ev-visual,
-.ev-photo,
-.past-video,
-.concept-img { border-radius: 2px; }
-
-
-/* 5. Every section label rhymes with the intro's gold eyebrow, and draws its
-      own rule in when it scrolls into view. */
-.section-label {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-.section-label::before {
-  content: '';
-  height: 1px;
-  width: 0;
-  flex-shrink: 0;
-  background: var(--gold);
-  opacity: 0.55;
-  transition: width 0.75s var(--ease-entrance) 0.12s;
-}
-.section-label.visible::before { width: 2.2rem; }
-
-/* 6. Reveals rack into focus rather than just sliding.
-      blur() is the only property in this transition that repaints rather than
-      composites, so it is held to 4px and its layer is promoted only while the
-      element is still waiting — once .visible lands, will-change goes away and
-      the compositor can drop the layer instead of keeping ~30 of them alive
-      for the rest of the session. */
-.reveal:not(.visible),
-.reveal-left:not(.visible),
-.reveal-scale:not(.visible) {
-  filter: blur(4px);
-  will-change: opacity, transform, filter;
-}
-.reveal.visible,
-.reveal-left.visible,
-.reveal-scale.visible { filter: blur(0); }
-.reveal,
-.reveal-left,
-.reveal-scale {
-  transition: opacity 0.75s var(--ease-entrance),
-              transform 0.75s var(--ease-entrance),
-              filter 0.75s var(--ease-entrance);
-}
-
-/* 7. Headings are declared once, at the top of this file, from the scale.
-      The second h2 block that used to live here is what made "one heading
-      size" five different sizes depending on which rule won. */
-
-/* ─── REDUCED MOTION ─────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  html { scroll-behavior: auto; }
-  .reveal,
-  .reveal-left,
-  .reveal-scale {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-  /* The hero always resolves to the loop tier here. Panels still crossfade
-     (opacity is not motion) but nothing translates. */
-  .svh-panel--first .svh-eyebrow,
-  .svh-panel--first .svh-title,
-  .svh-panel--first .svh-sub {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
-}
-
-/* ─── ONE EYEBROW, ONE CONTROL ────────────────── */
-/* Every uppercase micro-label on the page: section labels, badges, form
-   labels, buttons, footer column headings, the scroll cue. These used to be
-   eleven sizes between 9.6px and 12.48px with eight different trackings,
-   because each section wrote its own. There is one now.
-   Weight 500 — the site's only emphasis weight — replaces the 700 that <h4>
-   was inheriting in the footer and the stray 400 on the Send button. */
-/* Labels — read, not clicked. */
-.section-label,
-.svh-eyebrow,
-.svh-cue,
-.ev-badge,
-.ev-meta-item label,
-.ev-visual-main p,
-.ev-floater-label,
-.c-frame-inner p,
-.past-caption-loc,
-.contact-email-label,
-.form-field label,
-.f-col h4 {
-  font-family: var(--stack-text);
-  font-size: var(--t-eyebrow);
-  font-weight: 500;
-  letter-spacing: var(--tr-eyebrow);
-  text-transform: uppercase;
-  line-height: 1.6;
-}
-
-/* Controls — same treatment, one step up, because 12px is fine to read and
-   small to hit. */
-.svh-cta,
-.btn-cream,
-.btn-green,
-.btn-outline-cream,
-.lang-toggle,
-.lang-btn,
-.ev-ig-cta,
-.v-modal-close,
-.ig-link {
-  font-family: var(--stack-text);
-  font-size: var(--t-action);
-  font-weight: 500;
-  letter-spacing: var(--tr-eyebrow);
-  text-transform: uppercase;
-  line-height: 1.6;
-}
-
-/* ─── JAPANESE ────────────────────────────────── */
-/* The Latin faces cover no Japanese at all, so the second family in each
-   stack does all the work on /ja. What is left is everything Latin
-   typography does that Japanese typography does not.
-
-   Almost all of it is done by redefining scale tokens on the root rather
-   than by writing :lang(ja) rules per component. That matters for more than
-   tidiness: `:lang(ja)` matches EVERY element on the page (lang inherits), at
-   a specificity that beats a bare `h2` or `.svh-title` — so a blanket
-   `:lang(ja) { line-height }` silently reassigns body leading to the display
-   headings. Overriding the token instead leaves every component rule in
-   charge of its own role. */
-html:lang(ja) {
-  /* Japanese wants more leading than Latin at text sizes and much less of
-     the extra at display sizes, where the square body already fills the line. */
-  --lh-body:    1.85;
-  --lh-heading: 1.35;
-  --lh-display: 1.12;
-
-  /* Latin display tracking is drawn for Latin. Square-bodied glyphs want none
-     of it, and certainly none of the negative kind — the headings were
-     carrying up to -3.26px. */
-  --tr-display: 0.01em;
-  --tr-heading: 0.01em;
-  --tr-eyebrow: 0.08em;
-  --tr-body:    0.01em;
-
-  /* Uppercase is a Latin device, so the Japanese eyebrow separates itself by
-     size and colour instead — which means it needs a readable size. Controls
-     come up with it: 13px of kana is not a comfortable tap target. */
-  --t-eyebrow: 0.9375rem;
-  --t-action:  0.9375rem;
-
-  /* Proportional metrics: without palt, Japanese punctuation carries a full
-     em of air on both sides and the line looks gappy. */
-  font-feature-settings: "palt" 1;
-  line-break: strict;
-  /* Tightens the space around 「 」 and 。 at the start of a line. */
-  text-spacing-trim: trim-start;
-}
-/* Deliberately NOT `word-break: auto-phrase` here. It is a display-line
-   refinement, and setting it site-wide replaces Japanese's normal
-   break-between-any-two-characters behaviour with breaks only at phrase
-   boundaries — so a line Chrome reads as a single phrase has nowhere to break
-   and runs straight out of its box. It stays on the two hero lines below,
-   where the strings are short, with a guard. */
-
-/* Nothing here cancels italics any more: there are none to cancel. The site
-   has no `font-style: italic` at all, which is also the permanent fix for the
-   synthesised slant Japanese was getting — a rule that cannot be added back by
-   accident in one component. */
-
-/* text-transform does nothing to kana and kanji except leave them looking
-   undersized next to their tracking. */
-:lang(ja) .section-label,
-:lang(ja) .svh-eyebrow,
-:lang(ja) .svh-cue,
-:lang(ja) .svh-cta,
-:lang(ja) .btn-cream,
-:lang(ja) .btn-green,
-:lang(ja) .btn-outline-cream,
-:lang(ja) .ev-badge,
-:lang(ja) .ev-meta-item label,
-:lang(ja) .ev-floater-label,
-:lang(ja) .ev-ig-cta,
-:lang(ja) .past-caption-loc,
-:lang(ja) .ig-link,
-:lang(ja) .contact-email-label,
-:lang(ja) .form-field label,
-:lang(ja) .f-col h4 {
-  text-transform: none;
-}
-
-/* The language toggle is the exception: JP / EN are Latin abbreviations on
-   both locales, and they stay set as ones. */
-:lang(ja) .lang-toggle,
-:lang(ja) .lang-btn {
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 0.8125rem;
-}
