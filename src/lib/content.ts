@@ -65,6 +65,13 @@ export const content = {
   padel: {
     label: { en: "The Sport", ja: "スポーツについて" },
     headingHtml: { en: "What is<br/>Padel?", ja: "パデルとは？" },
+    /* Restored for the redesign: they set the index row beside the lead in
+       the Padel header, not captions on the artwork. */
+    mediaLabels: {
+      equipment: { en: "Equipment", ja: "用具" },
+      court: { en: "The Court", ja: "コート" },
+      gameplay: { en: "Gameplay", ja: "ゲームプレイ" },
+    },
     desc: {
       en: "A sport built on rhythm, connection, and shared moments.",
       ja: "パデルはスペイン発祥の急成長中のラケットスポーツで、テニスとスカッシュの要素を組み合わせています。社交的でアクセスしやすく、バックグラウンドを問わず始めやすいスポーツです。",

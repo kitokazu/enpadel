@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Design handoff bundle (references/design_handoff_enpadel_refresh).
+# An input to the Sep 2026 refresh, not source: 12MB of it is `assets/`,
+# byte-for-byte copies of files already in public/. Kept locally to compare
+# against — see HANDOVER.md §6b. Drop this line if the team wants it versioned.
+/references
